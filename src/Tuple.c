@@ -23,6 +23,12 @@ Tuple tuple_createVector(float x, float y, float z)
 	return vector;
 }
 
+Tuple tuple_createColor(float r, float g, float b)
+{
+	Tuple color = {r, g, b, 1};
+	return color;
+}
+
 static int tuple_floatCompare(float a, float b)
 {
 	if (fabsf(a - b) < EPSILON) {
@@ -124,6 +130,15 @@ Tuple tuple_vectorCross(Tuple v1, Tuple v2)
 									  v1.z * v2.x - v1.x * v2.z,
 									  v1.x * v2.y - v1.y * v2.x);
 	return cross;
+}
+
+Tuple tuple_colorBlend(Tuple c1, Tuple c2)
+{
+	Tuple blendColor = {c1.x * c2.x, 
+						c1.y * c2.y, 
+						c1.z * c2.z, 
+						c1.w * c2.w};
+	return blendColor;
 }
 
 void tuple_tuplePrint(Tuple t)

@@ -40,6 +40,9 @@ Tuple tuple_createVector(float x, float y, float z);
 * 
 * \return 1 if the floats are equal, otherwise 0
 */
+
+Tuple tuple_createColor(float r, float g, float b);
+
 static int tuple_floatCompare(float a, float b);
 
 /*
@@ -69,5 +72,7 @@ Tuple tuple_vectorNormalize(Tuple v);
 float tuple_vectorDot(Tuple v1, Tuple v2);
 
 Tuple tuple_vectorCross(Tuple v1, Tuple v2);
+
+Tuple tuple_colorBlend(Tuple c1, Tuple c2);
 
 void tuple_tuplePrint(Tuple t);

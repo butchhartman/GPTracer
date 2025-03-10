@@ -178,6 +178,44 @@ void test_tuple_vectorCross() {
 	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(c2, tuple_vectorCross(v2, v1)));
 }
 
+void test_tuple_createColor() {
+	Tuple color = tuple_createColor(-0.5, 0.4, 1.7);
+	TEST_ASSERT_EQUAL_FLOAT(-0.5, color.x);
+	TEST_ASSERT_EQUAL_FLOAT(0.4, color.y);
+	TEST_ASSERT_EQUAL_FLOAT(1.7, color.z);
+	TEST_ASSERT_EQUAL_FLOAT(1.0, color.w);
+}
+
+void test_tuple_tupleAdd_colors() {
+	Tuple color = tuple_createColor(0.9, 0.6, .75);
+	Tuple color2 = tuple_createColor(.7, 0.1, 0.25);
+	Tuple ans = { 1.6, 0.7, 1.0, 2.0 };
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(ans, tuple_tupleAdd(color, color2)));
+
+}
+
+void test_tuple_tupleSub_colors() {
+	Tuple color = tuple_createColor(0.9, 0.6, .75);
+	Tuple color2 = tuple_createColor(.7, 0.1, 0.25);
+	Tuple ans = {0.2, 0.5, 0.5, 0};
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(ans, tuple_tupleSub(color, color2)));
+}
+
+void test_tuple_tupleMuls_colors() {
+	Tuple color = tuple_createColor(0.2, 0.3, .4);
+	float scalar = 2;
+	Tuple ans = { 0.4, 0.6, 0.8, 2 };
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(ans, tuple_tupleMuls(color, scalar)));
+}
+
+void test_tuple_colorBlend() {
+	Tuple c1 = tuple_createColor( 1, 0.2, 0.4 );
+	Tuple c2 = tuple_createColor( 0.9, 1, 0.1 );
+	Tuple testAns = tuple_createColor(0.9, 0.2, 0.04);
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(testAns, tuple_colorBlend(c1, c2)));
+
+}
+
 int main() {
 	UNITY_BEGIN();
 	RUN_TEST(test_tupleIsPoint);
@@ -197,5 +235,13 @@ int main() {
 	RUN_TEST(test_tuple_vectorNormalize);
 	RUN_TEST(test_tuple_vectorDot);
 	RUN_TEST(test_tuple_vectorCross);
+
+	RUN_TEST(test_tuple_createColor);
+	RUN_TEST(test_tuple_tupleAdd_colors);
+	RUN_TEST(test_tuple_tupleSub_colors);
+	RUN_TEST(test_tuple_tupleMuls_colors);
+	RUN_TEST(test_tuple_colorBlend);
+
+
 	return UNITY_END();
 }

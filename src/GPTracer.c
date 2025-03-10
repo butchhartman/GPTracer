@@ -11,7 +11,7 @@ void tick(Environment e, Projectile *p) {
 }
 
 int main() {
-	Projectile cannonball = { tuple_createPoint(0, 1, 0), tuple_tupleMuls(tuple_vectorNormalize(tuple_createVector(1, 1, 0)), 50) };
+	Projectile cannonball = { tuple_createPoint(0, 1, 0), tuple_tupleMuls(tuple_vectorNormalize(tuple_createVector(2, 9, 0)), 5) };
 	Environment world = { tuple_createVector(0, -0.1, 0), tuple_createVector(-0.01, 0, 0) };
 
 	while (cannonball.position.y > 0 ) {
