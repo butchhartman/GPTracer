@@ -12,7 +12,7 @@ foreach(fileDir ${srcFiles})
 	project(${fileName})
 
 
-	add_executable(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/tests/${fileName}.c" ${testCSourceFiles}) #{CMAKE_SOURCE_DIR}/src/${sourceFileName}.c")
+	add_executable(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/tests/${fileName}.c" ${testCSourceFiles} "${CMAKE_SOURCE_DIR}/src/CommonOperations.c") #{CMAKE_SOURCE_DIR}/src/${sourceFileName}.c")
 
 	target_link_libraries(${PROJECT_NAME} unity)
 	
