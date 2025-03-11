@@ -86,7 +86,7 @@ Tuple tuple_tupleSub(Tuple t1, Tuple t2)
 
 Tuple tuple_tupleNegate(Tuple t)
 {
-	Tuple neg = { -t.x, -t.y, -t.z, - t.w };
+	Tuple neg = { -t.x, -t.y, -t.z, -t.w };
 	return neg;
 }
 

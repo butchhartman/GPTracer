@@ -9,6 +9,7 @@ void ppm_writePPM(char** PPMdata) {
 		printf("Failed to open file.\n");
 		exit(1);
 	}
+
 	fprintf(fptr, PPMdata[0]);
 	fprintf(fptr, PPMdata[1]);
 	fprintf(fptr, PPMdata[2]);
