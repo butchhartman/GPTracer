@@ -1,8 +1,6 @@
 #include <math.h>
 #include "Tuple.h"
 
-const float EPSILON = 0.0001f;
-
 Tuple tuple_createPoint(float x, float y, float z)
 {
 	Tuple point = { 0 };
@@ -29,23 +27,13 @@ Tuple tuple_createColor(float r, float g, float b)
 	return color;
 }
 
-static int tuple_floatCompare(float a, float b)
-{
-	if (fabsf(a - b) < EPSILON) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
-
 int tuple_tupleCompare(Tuple t1, Tuple t2)
 {
 
-	if (tuple_floatCompare(t1.x, t2.x) &&
-		tuple_floatCompare(t1.y , t2.y) &&
-		tuple_floatCompare(t1.z, t2.z) &&
-		tuple_floatCompare(t1.w, t2.w)) {
+	if (floatCompare(t1.x, t2.x) &&
+		floatCompare(t1.y , t2.y) &&
+		floatCompare(t1.z, t2.z) &&
+		floatCompare(t1.w, t2.w)) {
 		return 1;
 	}
 	else {
@@ -144,4 +132,26 @@ Tuple tuple_colorBlend(Tuple c1, Tuple c2)
 void tuple_tuplePrint(Tuple t)
 {
 	printf("( %f, %f, %f, %f)\n", t.x, t.y, t.z, t.w);
+}
+
+float* tuple_tupleGetMember(Tuple tuple, int memberIndex)
+{
+	switch (memberIndex)
+	{
+	case 0:
+		return &tuple.x;
+		break;
+	case 1:
+		return &tuple.y;
+		break;
+	case 2:
+		return &tuple.z;
+		break;
+	case 3:
+		return &tuple.w;
+		break;
+	default:
+		return NULL;
+		break;
+	}
 }

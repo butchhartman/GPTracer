@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include "CommonOperations.h"
 
 typedef struct {
 	float x;
@@ -51,17 +52,6 @@ Tuple tuple_createVector(float x, float y, float z);
 * \return Tuple - A tuple representing a color value. It w value is technically 1 one but in its application the w value is clipped.
 */
 Tuple tuple_createColor(float r, float g, float b);
-
-/*
-* Helper function for tuple_tupleCompare.
-* Compares two float numbers for equality.
-* 
-* \param a - Number 1 for comparison
-* \param b - Number 2 for comparison
-* 
-* \return 1 if floats are equal, otherwise 0
-*/
-static int tuple_floatCompare(float a, float b);
 
 /*
 * Compares and checks if the passed tuples are equal
@@ -177,3 +167,5 @@ Tuple tuple_colorBlend(Tuple c1, Tuple c2);
 * \param t - The tuple to be printed
 */
 void tuple_tuplePrint(Tuple t);
+
+float* tuple_tupleGetMember(Tuple tuple, int memberIndex);

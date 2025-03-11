@@ -216,6 +216,20 @@ void test_tuple_colorBlend() {
 
 }
 
+void test_tuple_tupleGetMember() {
+	Tuple tuple = tuple_createPoint(1, 2, 3);
+
+	float *tupleMember;
+	tupleMember = tuple_tupleGetMember(tuple, 0);
+	TEST_ASSERT_EQUAL_FLOAT(1, *tupleMember);
+	tupleMember = tuple_tupleGetMember(tuple, 1);
+	TEST_ASSERT_EQUAL_FLOAT(2, *tupleMember);
+	tupleMember = tuple_tupleGetMember(tuple, 2);
+	TEST_ASSERT_EQUAL_FLOAT(3, *tupleMember);
+	tupleMember = tuple_tupleGetMember(tuple, 3);
+	TEST_ASSERT_EQUAL_FLOAT(1, *tupleMember);
+}
+
 int main() {
 	UNITY_BEGIN();
 	RUN_TEST(test_tupleIsPoint);
@@ -242,6 +256,6 @@ int main() {
 	RUN_TEST(test_tuple_tupleMuls_colors);
 	RUN_TEST(test_tuple_colorBlend);
 
-
+	RUN_TEST(test_tuple_tupleGetMember);
 	return UNITY_END();
 }
