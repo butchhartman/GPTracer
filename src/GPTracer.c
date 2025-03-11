@@ -11,12 +11,25 @@ void tick(Environment e, Projectile *p) {
 }
 
 int main() {
-	Projectile cannonball = { tuple_createPoint(0, 1, 0), tuple_tupleMuls(tuple_vectorNormalize(tuple_createVector(2, 9, 0)), 5) };
+	Canvas canvas = canvas_createCanvas(1000, 500);
+
+	Tuple drawColor = tuple_createColor(0.8, 0.2, 0.2);
+	Projectile cannonball = { tuple_createPoint(0, 1, 0), tuple_tupleMuls(tuple_vectorNormalize(tuple_createVector(1, 1.6, 0)), 10) };
 	Environment world = { tuple_createVector(0, -0.1, 0), tuple_createVector(-0.01, 0, 0) };
 
-	while (cannonball.position.y > 0 ) {
+	while (cannonball.position.y > 0) {
 		tick(world, &cannonball);
+
+		if (cannonball.position.y <= 0 || cannonball.position.x >= canvas.width || cannonball.position.y > canvas.height) {
+			printf("Canvas bound reached, exiting loop.\n");
+			break;
+		}
+
+		canvas_writePixel(&canvas, drawColor, (int)cannonball.position.x, canvas.height - (int)cannonball.position.y);
 	}
+
+	int datalength;
+	ppm_writePPM(canvas_canvasToPPM(canvas, &datalength));
 
 	return 0;
 }

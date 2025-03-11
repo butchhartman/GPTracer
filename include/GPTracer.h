@@ -1,5 +1,7 @@
 #pragma once
 #include "Tuple.h"
+#include "Canvas.h"
+#include "PPM.h"
 
 typedef struct {
 	Tuple position;
