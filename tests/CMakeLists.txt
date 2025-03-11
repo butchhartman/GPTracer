@@ -19,5 +19,6 @@ foreach(fileDir ${srcFiles})
 	target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 	target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/vendor/Unity/src")
 
+	add_test(${fileName} ${PROJECT_NAME})
 endforeach()
 
