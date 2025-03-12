@@ -11,3 +11,5 @@
 * \return 1 if floats are equal, otherwise 0
 */
 int floatCompare(float a, float b);
+
+int isOdd(int a);

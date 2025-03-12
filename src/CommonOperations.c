@@ -12,3 +12,13 @@ int floatCompare(float a, float b)
 		return 0;
 	}
 }
+
+int isOdd(int a)
+{
+	if (a%2 == 0) {
+		return 0;
+	} 
+	else if (a%2 == 1){
+		return 1;
+	}
+}
