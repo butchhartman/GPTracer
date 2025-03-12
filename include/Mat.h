@@ -29,3 +29,14 @@ float mat_mat4Determinant(Mat4 source);
 float mat_mat4Cofactor(Mat4 source, int row, int column);
 float mat_mat4Minor(Mat4 source, int row, int column);
 void mat_mat4Inverse(Mat4 source, Mat4 dest);
+
+void mat_mat4CreateTranslation(Mat4 dest, float x, float y, float z);
+void mat_mat4CreateScaling(Mat4 dest, float x, float y, float z);
+
+void mat_mat4CreateRotation_x(Mat4 dest, float angle);
+void mat_mat4CreateRotation_y(Mat4 dest, float angle);
+void mat_mat4CreateRotation_z(Mat4 dest, float angle);
+
+void mat_mat4CreateShearing(Mat4 dest, float xpy, float xpz, float ypx, float ypz, float zpx, float zpy);
+
+Tuple mat_mat4ChainMatrices(Mat4 rotation, Mat4 scaling, Mat4 translation, Tuple tuple);

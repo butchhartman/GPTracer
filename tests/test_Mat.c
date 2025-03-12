@@ -480,6 +480,121 @@ void test_mat4MulInverse() {
 	TEST_ASSERT_EQUAL_INT(1, mat_mat4Compare(a,  newC));
 }
 
+void test_MultiplyByTransformMatrix() {
+	Mat4 translation = {0};
+	mat_mat4CreateTranslation(translation, 5, -3, 2);
+
+	Tuple point = tuple_createPoint(-3, 4, 5);
+
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(2, 1, 7), mat_mat4MultuplyTuple(translation, point)));
+
+	Mat4 inverseTranslation = {0};
+	mat_mat4Inverse(translation, inverseTranslation);
+
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(-8,7,3), mat_mat4MultuplyTuple(inverseTranslation, point)));
+
+	Tuple vector = tuple_createVector(-3, 4, 5);
+
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(vector, mat_mat4MultuplyTuple(translation, vector)));
+
+}
+
+void test_scalingMatrix() {
+	Mat4 scalingMatrix = {0};
+	mat_mat4CreateScaling(scalingMatrix, 2, 3, 4);
+	Mat4 invScalingMatrix = {0};
+	mat_mat4Inverse(scalingMatrix, invScalingMatrix);
+
+	Tuple point = tuple_createPoint(-4, 6, 8);
+	Tuple vector = tuple_createVector(-4, 6, 8);
+
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(-8, 18, 32), mat_mat4MultuplyTuple(scalingMatrix, point)) );
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createVector(-8, 18, 32), mat_mat4MultuplyTuple(scalingMatrix, vector)) );
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createVector(-2, 2, 2), mat_mat4MultuplyTuple(invScalingMatrix, vector)) );
+}
+
+void test_scalingReflection() {
+	Mat4 reflectionMatrix = {0};
+	mat_mat4CreateScaling(reflectionMatrix, -1, 1, 1);
+	Tuple point = tuple_createPoint(2, 3, 4);
+
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(-2,3,4), mat_mat4MultuplyTuple(reflectionMatrix, point)));
+}
+
+void test_mat4Rotation() {
+	Mat4 rotationMatrix = {0};
+	Tuple point = tuple_createPoint(0,1,0);
+	Tuple pointY = tuple_createPoint(0, 0, 1);
+
+	mat_mat4CreateRotation_x(rotationMatrix, rad(45));
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(0, sqrtf(2.0)/2.0, sqrtf(2.0)/2.0), mat_mat4MultuplyTuple(rotationMatrix, point)) );
+
+	mat_mat4CreateRotation_x(rotationMatrix, rad(90));	
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(0,0, 1), mat_mat4MultuplyTuple(rotationMatrix, point)) );
+
+	mat_mat4CreateRotation_y(rotationMatrix, rad(45));
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(sqrtf(2.0)/2.0, 0, sqrtf(2.0)/2.0), mat_mat4MultuplyTuple(rotationMatrix, pointY)) );
+
+	mat_mat4CreateRotation_y(rotationMatrix, rad(90));
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(1, 0, 0), mat_mat4MultuplyTuple(rotationMatrix, pointY)) );
+
+	mat_mat4CreateRotation_z(rotationMatrix, rad(45));
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(-sqrtf(2.0)/2.0, sqrtf(2.0)/2.0, 0), mat_mat4MultuplyTuple(rotationMatrix, point)) );
+
+	mat_mat4CreateRotation_z(rotationMatrix, rad(90));
+	TEST_ASSERT_EQUAL_INT(1, tuple_tupleCompare(tuple_createPoint(-1, 0, 0), mat_mat4MultuplyTuple(rotationMatrix, point)) );
+}
+
+void test_mat4Shearing() {
+	Mat4 shearMatrix = {0};
+
+	mat_mat4CreateShearing(shearMatrix, 1, 0, 0, 0, 0, 0);
+	Tuple point = tuple_createPoint(2, 3, 4);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(5, 3, 4), mat_mat4MultuplyTuple(shearMatrix, point)));
+
+
+	mat_mat4CreateShearing(shearMatrix, 0, 1, 0, 0, 0, 0);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(6, 3, 4), mat_mat4MultuplyTuple(shearMatrix, point)));
+	
+
+	mat_mat4CreateShearing(shearMatrix, 0, 0, 1, 0, 0, 0);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(2, 5, 4), mat_mat4MultuplyTuple(shearMatrix, point)));
+
+
+	mat_mat4CreateShearing(shearMatrix, 0, 0, 0, 1, 0, 0);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(2, 7, 4), mat_mat4MultuplyTuple(shearMatrix, point)));
+
+
+	mat_mat4CreateShearing(shearMatrix, 0, 0, 0, 0, 1, 0);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(2, 3, 6), mat_mat4MultuplyTuple(shearMatrix, point)));
+
+
+	mat_mat4CreateShearing(shearMatrix, 0, 0, 0, 0, 0, 1);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(2, 3, 7), mat_mat4MultuplyTuple(shearMatrix, point)));
+}
+
+void test_mat4Chaining() {
+	Tuple originalPoint = tuple_createPoint(1, 0, 1);
+	Mat4 rotation_x  = {0};
+	mat_mat4CreateRotation_x(rotation_x, rad(90));
+	Mat4 scaling = {0};
+	mat_mat4CreateScaling(scaling, 5, 5, 5);
+	Mat4 translation = {0};
+	mat_mat4CreateTranslation(translation, 10, 5, 7);
+
+	Tuple point2 = mat_mat4MultuplyTuple(rotation_x, originalPoint);
+	Tuple point3 = mat_mat4MultuplyTuple(scaling, point2);
+	Tuple point4 = mat_mat4MultuplyTuple(translation, point3);
+
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(1, -1, 0), point2));
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(5, -5, 0), point3));
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(15, 0, 7), point4));
+
+	Tuple point5 = mat_mat4ChainMatrices(rotation_x, scaling, translation, originalPoint);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(15, 0, 7), point5));
+	
+}
+
 int main() {
 	RUN_TEST(test_mat2ConstructionTest);
 	RUN_TEST(test_mat3ConstructionTest);
@@ -501,5 +616,11 @@ int main() {
 	RUN_TEST(test_mat4Cofactor);
 	RUN_TEST(test_mat4Inverse);
 	RUN_TEST(test_mat4MulInverse);
+	RUN_TEST(test_MultiplyByTransformMatrix);
+	RUN_TEST(test_scalingMatrix);
+	RUN_TEST(test_scalingReflection);
+	RUN_TEST(test_mat4Rotation);
+	RUN_TEST(test_mat4Shearing);
+	RUN_TEST(test_mat4Chaining);
 	return UNITY_END();
 }

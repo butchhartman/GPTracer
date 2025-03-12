@@ -219,3 +219,80 @@ void mat_mat4Inverse(Mat4 source, Mat4 dest) {
 		}
 	}
 }
+
+void mat_mat4CreateTranslation(Mat4 dest, float x, float y, float z){
+	Mat4 translationMatrix = MAT4_IDENTITY;
+	translationMatrix[0][3] = x;	
+	translationMatrix[1][3] = y;
+	translationMatrix[2][3] = z;
+	mat_mat4Copy(translationMatrix, dest);
+}
+
+void mat_mat4CreateScaling(Mat4 dest, float x, float y, float z){
+	Mat4 scalingMatrix = MAT4_IDENTITY;
+	scalingMatrix[0][0] = x;
+	scalingMatrix[1][1] = y;
+	scalingMatrix[2][2] = z;
+	mat_mat4Copy(scalingMatrix, dest);
+}
+
+void mat_mat4CreateRotation_x(Mat4 dest, float angle){
+	Mat4 rotationMatrix_x = MAT4_IDENTITY;
+	rotationMatrix_x[1][1] = cosf(angle);
+	rotationMatrix_x[1][2] = -sinf(angle);
+
+	rotationMatrix_x[2][1] = sinf(angle);
+	rotationMatrix_x[2][2] = cosf(angle);
+	
+	mat_mat4Copy(rotationMatrix_x, dest);
+}
+
+void mat_mat4CreateRotation_y(Mat4 dest, float angle){
+	Mat4 rotationMatrix_y = MAT4_IDENTITY;
+	rotationMatrix_y[0][0] = cosf(angle);
+	rotationMatrix_y[0][2] = sinf(angle);
+
+	rotationMatrix_y[2][0] = -sinf(angle);
+	rotationMatrix_y[2][2] = cosf(angle);
+
+	mat_mat4Copy(rotationMatrix_y, dest);
+}
+
+void mat_mat4CreateRotation_z(Mat4 dest, float angle){
+	Mat4 rotationMatrix_z = MAT4_IDENTITY;
+
+	rotationMatrix_z[0][0] = cosf(angle);
+	rotationMatrix_z[0][1] = -sinf(angle);
+
+	rotationMatrix_z[1][0] = sinf(angle);
+	rotationMatrix_z[1][1] = cosf(angle);
+
+	mat_mat4Copy(rotationMatrix_z, dest);
+
+}
+
+void mat_mat4CreateShearing(Mat4 dest, float xpy, float xpz, float ypx, float ypz, float zpx, float zpy){
+	Mat4 shearingMatrix = MAT4_IDENTITY;
+
+	shearingMatrix[0][1] = xpy;
+	shearingMatrix[0][2] = xpz;
+	
+	shearingMatrix[1][0] = ypx;
+	shearingMatrix[1][2] = ypz;
+
+	shearingMatrix[2][0] = zpx;
+	shearingMatrix[2][1] = zpy;
+	
+	mat_mat4Copy(shearingMatrix, dest);
+}
+
+Tuple mat_mat4ChainMatrices(Mat4 rotation, Mat4 scaling, Mat4 translation, Tuple tuple){
+	Mat4 cb = {0};
+	Mat4 cba = {0};
+
+	mat_mat4MultiplyMat4(translation, scaling, cb);
+	mat_mat4MultiplyMat4(cb, rotation, cba);
+
+	Tuple finalPoint = mat_mat4MultuplyTuple(cba, tuple);
+    return finalPoint;
+}
