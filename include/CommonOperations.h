@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include <stdio.h>
 #include <math.h>
 
 /*
@@ -13,3 +15,5 @@
 int floatCompare(float a, float b);
 
 int isOdd(int a);
+// degrees to radians
+float rad(float angle);

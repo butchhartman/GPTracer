@@ -22,3 +22,7 @@ int isOdd(int a)
 		return 1;
 	}
 }
+
+float rad(float angle){
+	return (angle / 180.0) * M_PI;
+}
