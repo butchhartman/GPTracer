@@ -1,6 +1,7 @@
 #pragma once
 #include "Tuple.h"
 #include "Canvas.h"
+#include "Mat.h"
 #include "PPM.h"
 
 typedef struct {
