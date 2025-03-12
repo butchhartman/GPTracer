@@ -405,3 +405,5 @@ vendor/
 .vscode/
 
 .vs/
+
+GeneratedImages/
