@@ -20,9 +20,11 @@ int isOdd(int a)
 	} 
 	else if (a%2 == 1){
 		return 1;
-	}
+	} 
+
+	return 1000; // This is to silence the compiler warning. Should never reach this.
 }
 
 float rad(float angle){
-	return (angle / 180.0) * M_PI;
+	return (angle / 180.0f) * (float)M_PI;
 }

@@ -8,7 +8,7 @@
       "buildRoot": "${projectDir}\\bin",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
+      "buildCommandArgs": "/W4",
       "ctestCommandArgs": ""
     }
   ]

@@ -186,7 +186,7 @@ int canvas_RGBClamp(float num) {
 		clamped = 0;
 	}
 	else {
-		clamped = num;
+		clamped =(int)num;
 	}
  
 	return clamped;

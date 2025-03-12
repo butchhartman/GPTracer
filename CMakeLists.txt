@@ -1,5 +1,8 @@
 #TODO : document
+# For some reason, CMAKE will only output compiler warnings when a clean rebuild is done
+# DO CLEAN REBUILD FOR WARNINGS!!!
 cmake_minimum_required(VERSION 3.11)
+set(CMAKE_C_STANDARD 99)
 
 enable_testing()
 
@@ -7,6 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 project(GPTracer)
+
 
 execute_process(COMMAND git submodule update --init --recursive)
 
@@ -18,3 +22,4 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/ve
 add_subdirectory("vendor/Unity")
 add_subdirectory("tests")
 target_link_libraries(${PROJECT_NAME} unity)
+

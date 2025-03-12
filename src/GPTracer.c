@@ -15,18 +15,17 @@ void tick(Environment e, Projectile *p) {
 * and no other translation needs to take place because the rotation is about the origin.
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
-int main() {
+int main(int argc, char* argv[]) {
 	Canvas canvas = canvas_createCanvas(100, 100);
-
-	Tuple drawColor = tuple_createColor(0.8, 0.2, 0.2);
+	Tuple drawColor = tuple_createColor(0.8f, 0.2f, 0.2f);
 
 	for (int i = 0; i < 12; i++) {
 		Mat4 rotationMatrix = {0};
 		Mat4 translationMatrix = {0};
-		Tuple point = tuple_createPoint(0, canvas.width/2 * 0.8, 0);
+		Tuple point = tuple_createPoint(0, (float)(canvas.width/2 * 0.8f), 0);
 
-		mat_mat4CreateRotation_z(rotationMatrix, rad(-30 * i));
-		mat_mat4CreateTranslation(translationMatrix, canvas.width/2, canvas.height/2, 0);
+		mat_mat4CreateRotation_z(rotationMatrix, rad((float)(-30 * i)));
+		mat_mat4CreateTranslation(translationMatrix, (float)(canvas.width/2), (float)(canvas.height/2), 0);
 
 		point = mat_mat4MultuplyTuple(rotationMatrix, point);
 		point = mat_mat4MultuplyTuple(translationMatrix, point);
