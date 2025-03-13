@@ -16,7 +16,7 @@ add_compile_options(/W4 /fsanitize=address)
 
 execute_process(COMMAND git submodule update --init --recursive)
 
-add_executable(${PROJECT_NAME} "src/GPTracer.c" "src/datatypes/Tuple.c" "src/datatypes/Canvas.c" "src/PPM.c" "src/datatypes/Mat.c" "src/CommonOperations.c" "src/datatypes/Ray.c" "src/datatypes/Sphere.c")
+add_executable(${PROJECT_NAME} "src/GPTracer.c" "src/datatypes/Tuple.c" "src/datatypes/Canvas.c" "src/PPM.c" "src/datatypes/Mat.c" "src/CommonOperations.c" "src/datatypes/Ray.c" "src/datatypes/Sphere.c" "src/datatypes/Intersection.c")
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/vendor/Unity/src")
