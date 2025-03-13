@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 		for (int i = 0; i < argc; i++) {
 			printf("%s", argv[i]);
 		
-			if (strcmp("--pickleRick", argv[i])) {
+			if (strcmp("--pickleRick", argv[i]) == 0) {
 				printf("lol\n");
 			}
 		}
