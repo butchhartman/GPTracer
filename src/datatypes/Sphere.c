@@ -2,7 +2,7 @@
 
 
 
-Sphere sphere_createSphere(Tuple origin, int radius, unsigned int instanceID, Mat4 transform){
+Sphere sphere_createSphere(Tuple origin, int radius, unsigned int instanceID, Mat4 transform, Material material){
     Sphere newSphere = {0};
     newSphere.origin = origin;
     newSphere.radius = radius;
@@ -13,6 +13,9 @@ Sphere sphere_createSphere(Tuple origin, int radius, unsigned int instanceID, Ma
         Mat4 Iden = MAT4_IDENTITY;
         mat_mat4Copy(Iden, newSphere.transform);
     }
+
+    newSphere.material = material;
+
     return newSphere;
 }
 

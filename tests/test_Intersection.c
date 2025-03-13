@@ -9,8 +9,10 @@ void tearDown() {
 
 }
 
+
 void test_intersectioinCreate() {
-    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
     Intersection i = intersection_intersectionCreateIntersection(s, 3.5f);
 
     TEST_ASSERT_EQUAL_FLOAT(3.5f, i.t);
@@ -18,7 +20,9 @@ void test_intersectioinCreate() {
 }
 
 void test_aggregatingIntersections() {
-    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL);
+
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
     Intersection i = intersection_intersectionCreateIntersection(s, 3.5f);
     Intersection i2 = intersection_intersectionCreateIntersection(s, 2.0f);
 
@@ -32,7 +36,8 @@ void test_aggregatingIntersections() {
 }
 
 void test_intersectionDetermineHit() {
-    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
     Intersection i1 = intersection_intersectionCreateIntersection(s, 1);
     Intersection i2 = intersection_intersectionCreateIntersection(s, 2);
     
@@ -47,7 +52,8 @@ void test_intersectionDetermineHit() {
 
 void test_intersectionDetermineHit_someNegative(){
 
-    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
     Intersection i1 = intersection_intersectionCreateIntersection(s, -1);
     Intersection i2 = intersection_intersectionCreateIntersection(s, 1);
     
@@ -62,7 +68,8 @@ void test_intersectionDetermineHit_someNegative(){
 
 void test_intersectionDetermineHit_allNegative() {
 
-    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
     Intersection i1 = intersection_intersectionCreateIntersection(s, -1);
     Intersection i2 = intersection_intersectionCreateIntersection(s, -2);
     
@@ -77,7 +84,8 @@ void test_intersectionDetermineHit_allNegative() {
 
 void test_intersectionDetermineHit_manyIntersections() {
 
-    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
     Intersection i1 = intersection_intersectionCreateIntersection(s, 5);
     Intersection i2 = intersection_intersectionCreateIntersection(s, 7);
     Intersection i3 = intersection_intersectionCreateIntersection(s, -3);

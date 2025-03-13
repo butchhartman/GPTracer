@@ -29,8 +29,8 @@ int main(int argc, char* argv[]) {
 
 	Canvas canvas = canvas_createCanvas(250, 250);
 	Tuple drawColor = tuple_createColor(0.8f, 0.2f, 0.2f);
-
-	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+	Material mat = material_createMaterial(tuple_createColor(1, 0, 0.2f), 0.1f, 0.9f, 0.9f, 200.0f);
+	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
 
 	Mat4 scaling;
 	Mat4 skew;

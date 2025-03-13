@@ -10,7 +10,8 @@ void tearDown() {
 }
 
 void test_createSphere() {
-    Sphere newSphere1 = sphere_createSphere(tuple_createPoint(0, 1, 0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere newSphere1 = sphere_createSphere(tuple_createPoint(0, 1, 0), 1, 0, NULL, mat);
 
    TEST_ASSERT_TRUE(tuple_tupleCompare(newSphere1.origin, tuple_createPoint(0, 1, 0))); 
    TEST_ASSERT_EQUAL(1, newSphere1.radius);
@@ -18,28 +19,32 @@ void test_createSphere() {
 }
 
 void test_sphereDefaultTransform() {
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
     Mat4 expected = MAT4_IDENTITY;
-    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL);
+    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
     TEST_ASSERT_TRUE(mat_mat4Compare(expected, newSphere.transform));
 }
 
 void test_sphereSetTransform(){
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
     Mat4 expected;
     mat_mat4CreateTranslation(expected, 2, 3, 4);
-    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL);
+    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL,mat);
     sphere_setTransform(&newSphere, expected);
     TEST_ASSERT_TRUE(mat_mat4Compare(expected, newSphere.transform));
 }
 
 void test_sphereCreateTransform() {
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
     Mat4 expected;
     mat_mat4CreateTranslation(expected, 2, 3, 4);
-    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, expected);
+    Sphere newSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, expected, mat);
     TEST_ASSERT_TRUE(mat_mat4Compare(expected, newSphere.transform));
 }
 
 void test_sphereNormalAt() {
-    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
     Tuple nx = sphere_normalAt(s, tuple_createPoint(1, 0, 0));
     Tuple ny = sphere_normalAt(s, tuple_createPoint(0, 1, 0));
     Tuple nz = sphere_normalAt(s, tuple_createPoint(0, 0, 1));
@@ -52,7 +57,8 @@ void test_sphereNormalAt() {
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(sqrtf(3)/3.0,  sqrtf(3)/3.0,  sqrtf(3)/3.0), tuple_vectorNormalize(nn)));
 }
 void test_sphereNormalAtTransformed() {
-    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Sphere s = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
     Mat4 translation;
     mat_mat4CreateTranslation(translation, 0, 1, 0);
     sphere_setTransform(&s, translation);
@@ -74,6 +80,16 @@ void test_sphereNormalAtTransformed() {
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0.97014f, -0.24254), n2));
 }
+
+void test_sphereMaterial() {
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 1.0f, 10.0f, 5.0f, 100.0f);
+    Sphere sp = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
+
+    TEST_ASSERT_EQUAL_FLOAT(1.0f, sp.material.ambient);
+    TEST_ASSERT_EQUAL_FLOAT(10.0f, sp.material.diffuse);
+    TEST_ASSERT_EQUAL_FLOAT(5.0f, sp.material.specular);
+    TEST_ASSERT_EQUAL_FLOAT(100.0f, sp.material.shininess);
+}
 int main() {
     RUN_TEST(test_createSphere);
     RUN_TEST(test_sphereDefaultTransform);
@@ -81,5 +97,6 @@ int main() {
     RUN_TEST(test_sphereCreateTransform);
     RUN_TEST(test_sphereNormalAt);
     RUN_TEST(test_sphereNormalAtTransformed);
+    RUN_TEST(test_sphereMaterial);
     return UNITY_END();
 }
