@@ -11,3 +11,5 @@ typedef struct {
 
 Sphere sphere_createSphere(Tuple origin, int radius, unsigned int instanceID, Mat4 transform);
 void sphere_setTransform(Sphere *sphere, Mat4 transform);
+
+Tuple sphere_normalAt(Sphere sphere, Tuple point);

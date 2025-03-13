@@ -128,7 +128,7 @@ Tuple mat_mat4MultuplyTuple(Mat4 mat, Tuple tuple){
 	Tuple t = { tupleMembers[0], tupleMembers[1], tupleMembers[2], tupleMembers[3] };
 	return t;
 }
-
+// the source can be the same as dest
 void mat_mat4Transpose(Mat4 mat, Mat4 dest) {
 	Mat4 copy;
 	mat_mat4Copy(mat, copy);
@@ -206,16 +206,18 @@ float mat_mat4Minor(Mat4 source, int row, int column)
 
     return mat_mat3Determinant(submatrix);
 }
-
+// source can be the same as dest.
 void mat_mat4Inverse(Mat4 source, Mat4 dest) {
 	if (mat_mat4Determinant(source) == 0) {
 		return;
 	}
+	Mat4 temp;
+	mat_mat4Copy(source, temp);
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			float cof = mat_mat4Cofactor(source, i, j);
-			dest[j][i] = cof / mat_mat4Determinant(source);
+			float cof = mat_mat4Cofactor(temp, i, j);
+			dest[j][i] = cof / mat_mat4Determinant(temp);
 		}
 	}
 }
