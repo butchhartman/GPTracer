@@ -16,6 +16,17 @@ void tick(Environment e, Projectile *p) {
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
 int main(int argc, char* argv[]) {
+
+	if (argc > 0) {
+		for (int i = 0; i < argc; i++) {
+			printf("%s", argv[i]);
+		
+			if (strcmp("--pickleRick", argv[i])) {
+				printf("lol\n");
+			}
+		}
+	}
+
 	Canvas canvas = canvas_createCanvas(100, 100);
 	Tuple drawColor = tuple_createColor(0.8f, 0.2f, 0.2f);
 

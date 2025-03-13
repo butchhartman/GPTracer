@@ -35,7 +35,7 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 		return NULL;
 	}
 
-	char magicNumber[4] = "P3\n\0";
+	char magicNumber[4] = "P3\n";
 
 	char sizeIdentifier[100]; // temp hack length
 	sprintf(sizeIdentifier, "%d", canvas.width);
@@ -47,7 +47,7 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 	strcat(sizeIdentifier, sizeTemp);
 	strcat(sizeIdentifier, "\n\0");
 
-	char maxRGBVal[5] = "255\n\0";
+	char maxRGBVal[5] = "255\n";
 
 //	printf("%d", sizeof(magicNumber));
 
@@ -71,7 +71,7 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 		curH = (int)(i / canvas.width);
 		for (int j = 0; j < 3; j++) {
 			char num[5];
-			int colorVal;
+			int colorVal = 0;
 			if (j == 0) {
 				colorVal = canvas_RGBClamp(canvas_pixelAt(canvas, i % canvas.width, curH).x * 255);
 			}
@@ -99,7 +99,7 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 	// Terminate string
 	//strcat(PPMdata[3], "\0");
 
-	//*dataLength = 4;
+	*dataLength = 4;
 
 	return PPMdata;
 

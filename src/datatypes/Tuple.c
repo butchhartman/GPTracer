@@ -39,15 +39,7 @@ int tuple_tupleCompare(Tuple t1, Tuple t2)
 	else {
 		return 0;
 	}
-	if (t1.x == t2.x &&
-		t1.y == t2.y &&
-		t1.z == t2.z &&
-		t1.w == t2.w) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
+	
 }
 
 Tuple tuple_tupleAdd(Tuple t1, Tuple t2)
