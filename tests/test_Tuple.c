@@ -230,6 +230,19 @@ void test_tuple_tupleGetMember() {
 	TEST_ASSERT_EQUAL_FLOAT(1, *tupleMember);
 }
 
+void test_tupleReflect(){
+	Tuple v = tuple_createVector(1, -1, 0);
+	Tuple n = tuple_createVector(0, 1, 0);
+	Tuple r = tuple_reflect(v, n);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(1,1,0), r));
+}
+
+void test_tupleReflectSlantedSurface() {
+	Tuple v = tuple_createVector(0, -1, 0);
+	Tuple n = tuple_createVector(sqrtf(2.0f)/2.0f, sqrtf(2.0f)/2.0f, 0);
+	Tuple r = tuple_reflect(v, n);
+	TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(1,0,0), r));
+}
 int main() {
 	UNITY_BEGIN();
 	RUN_TEST(test_tupleIsPoint);
@@ -257,5 +270,8 @@ int main() {
 	RUN_TEST(test_tuple_colorBlend);
 
 	RUN_TEST(test_tuple_tupleGetMember);
+	RUN_TEST(test_tupleReflect);
+	RUN_TEST(test_tupleReflectSlantedSurface);
 	return UNITY_END();
+
 }

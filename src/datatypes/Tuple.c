@@ -147,3 +147,7 @@ float* tuple_tupleGetMember(Tuple tuple, int memberIndex)
 		break;
 	}
 }
+
+Tuple tuple_reflect(Tuple vector, Tuple normal){
+return tuple_tupleSub(vector, tuple_tupleMuls(tuple_tupleMuls(normal, 2), tuple_vectorDot(vector, normal)));
+}

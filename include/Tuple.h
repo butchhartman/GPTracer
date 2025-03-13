@@ -169,3 +169,5 @@ Tuple tuple_colorBlend(Tuple c1, Tuple c2);
 void tuple_tuplePrint(Tuple t);
 
 float* tuple_tupleGetMember(Tuple tuple, int memberIndex);
+
+Tuple tuple_reflect(Tuple vector, Tuple normal);
