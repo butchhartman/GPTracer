@@ -67,11 +67,11 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 
 	// Populate string with data
 	int curH = 0;
+	char num[5];
+	int colorVal = 0;
 	for (int i = 0; i < canvas.width * canvas.height; i++) {
 		curH = (int)(i / canvas.width);
 		for (int j = 0; j < 3; j++) {
-			char num[5];
-			int colorVal = 0;
 			if (j == 0) {
 				colorVal = canvas_RGBClamp(canvas_pixelAt(canvas, i % canvas.width, curH).x * 255);
 			}

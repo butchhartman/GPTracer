@@ -6,6 +6,7 @@
 #include "Canvas.h"
 #include "Mat.h"
 #include "PPM.h"
+#include <time.h>
 
 typedef struct {
 	Tuple position;

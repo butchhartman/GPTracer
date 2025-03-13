@@ -71,9 +71,11 @@ int main(int argc, char* argv[]) {
 
 	}
 
+	clock_t start_time = clock();
 	int length;
 	ppm_writePPM(canvas_canvasToPPM(canvas, &length));
-
+	double elapsedTime = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+	printf("Program took %f seconds to write to PPM", elapsedTime);
 
 
 	// for (int i = 0; i < 12; i++) {
