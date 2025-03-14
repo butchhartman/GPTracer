@@ -54,7 +54,7 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
     comps.t = intersection.t;
     comps.object = intersection.object;
 
-    comps.point = ray_rayPosition(ray, intersection.t);
+    comps.point = ray_rayPosition(ray, comps.t);
     comps.eyev = tuple_tupleNegate(ray.direction);
     comps.normalv = sphere_normalAt(comps.object, comps.point);
 

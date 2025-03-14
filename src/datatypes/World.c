@@ -29,8 +29,26 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
         xs[i * 2].object = txs[0].object;
         xs[i * 2 + 1].object = txs[1].object;
     }
-   
-    bubbleSort(xs, 2*world.sphereCount);
+    // TODO : move to function. 
+    //THIS WHOLE FUCKING ERROR WAS CAUSED BY MY DUMBASS FORGETTING TO SORT THE OBJECT OF THE STRUCT WITH THE T VALUE!
+    // ONLY SORTING THE T VALUES CAUSED OBJECTS TO BE DRAWN OVER EACH OTHER! I DONT EVEN FUCKING KNOW WHY!!!
+    int n = 2*world.sphereCount;
+    for (int i = 0; i < n - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < n; j++) {
+            if (xs[j].t < xs[min].t)
+                min = j;
+        }
+       if (min != i) {
+            float temp = xs[min].t;
+            Sphere tspmo = xs[min].object;
+            xs[min].t = xs[i].t;
+            xs[min].object = xs[i].object;
+            xs[i].t = temp;
+            xs[i].object = tspmo;
+        }
+    }
+    //bubbleSort(xs, 2*world.sphereCount);
 
     // for (unsigned int i = 0; i < 2*world.sphereCount; i++) {
     //     printf("ARR %d : %f\n", i, xs[i].t);
@@ -40,7 +58,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
 }
 
 Tuple world_shadeHit(World world, Computations comps){
-    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.eyev); //ugh
+    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
 }
 
 Tuple world_worldColorAt(World world, Ray ray){

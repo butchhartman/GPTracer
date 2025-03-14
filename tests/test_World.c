@@ -91,7 +91,7 @@ void test_colorAt_inside() {
     w.spheres[1].material.ambient = 1;
 
     Tuple c = world_worldColorAt(w, r);
-    Tuple realColor = tuple_createColor(w.spheres[0].material.surfaceColor.x,  w.spheres[0].material.surfaceColor.y,  w.spheres[0].material.surfaceColor.z);
+    Tuple realColor = tuple_createColor(w.spheres[1].material.surfaceColor.x,  w.spheres[1].material.surfaceColor.y,  w.spheres[1].material.surfaceColor.z);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, realColor));
 }

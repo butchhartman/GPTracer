@@ -63,10 +63,10 @@ void test_rayForPixel_3() {
    mat_mat4MultiplyMat4(rotation, translation, transform);
 
     Camera camera = camera_createCamera(201, 101, rad(90), transform);
-    Ray r = camera_rayForPixel(camera, 0, 0);
+    Ray r = camera_rayForPixel(camera, 100, 50);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(0, 2, -5), r.origin));
-    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(-sqrtf(2.0f)/2.0f, 0, -sqrtf(2.0f)/2.0f), r.direction));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(sqrtf(2.0f)/2.0f, 0, -sqrtf(2.0f)/2.0f), r.direction));
 }
 
 void test_render() {
@@ -88,5 +88,8 @@ int main() {
     RUN_TEST(test_createCamera_pixelsize_h);
     RUN_TEST(test_createCamera_pixelsize_v);
     RUN_TEST(test_render);
+    RUN_TEST(test_rayForPixel_1);
+    RUN_TEST(test_rayForPixel_2);
+    RUN_TEST(test_rayForPixel_3);
     return UNITY_END();
 }
