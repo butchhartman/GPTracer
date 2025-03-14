@@ -40,7 +40,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
 }
 
 Tuple world_shadeHit(World world, Computations comps){
-    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.eyev);
+    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.eyev); //ugh
 }
 
 Tuple world_worldColorAt(World world, Ray ray){
