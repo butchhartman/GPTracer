@@ -16,72 +16,96 @@ void tick(Environment e, Projectile *p) {
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
 int main(int argc, char* argv[]) {
+	// World
+	World world;
+	world.light = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
+	// Camera
+	Mat4 viewTransform;
+	mat_mat4CreateView(viewTransform, tuple_createPoint(0, 1.5, -5), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
+	Camera camera = camera_createCamera(350, 250, rad(55), viewTransform);
+	// Floor
+	Mat4 floorScaling;
+	mat_mat4CreateScaling(floorScaling, 10, 0.01f, 10);
+	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f, 0.0f);
+	
+	Sphere floor = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, floorScaling, floorMat);
+	
+	// Left wall
+	Mat4 LWtr;
+	mat_mat4CreateTranslation(LWtr, 0, 0, 5);
+	Mat4 LWry;
+	mat_mat4CreateRotation_y(LWry, -M_PI_4);
+	Mat4 LWrx;
+	mat_mat4CreateRotation_x(LWrx, M_PI_2);
+	Mat4 LWsc;
+	mat_mat4CreateScaling(LWsc, 10, 0.01f, 10);
 
-	if (argc > 0) {
-		for (int i = 0; i < argc; i++) {
-			printf("%s", argv[i]);
-		
-			if (strcmp("--pickleRick", argv[i]) == 0) {
-				printf("lol\n");
-			}
-		}
-	}
+	
+	Mat4 leftWallTransform;
+	mat_mat4MultiplyMat4(LWtr, LWry, leftWallTransform);
+	mat_mat4MultiplyMat4(leftWallTransform, LWrx, leftWallTransform);
+	mat_mat4MultiplyMat4(leftWallTransform, LWsc, leftWallTransform);
+	Sphere leftWall = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 1, leftWallTransform, floorMat);
+	// Right wall
+	Mat4 RWtr;
+	mat_mat4CreateTranslation(RWtr, 0, 0, 5);
+	Mat4 RWry;
+	mat_mat4CreateRotation_y(RWry, M_PI_4);
+	Mat4 RWrx;
+	mat_mat4CreateRotation_x(RWrx, M_PI_2);
+	Mat4 RWsc;
+	mat_mat4CreateScaling(RWsc, 10, 0.01f, 10);
 
-	Canvas canvas = canvas_createCanvas(250, 250);
-	Tuple drawColor = tuple_createColor(0.8f, 0.2f, 0.2f);
-	Material mat = material_createMaterial(tuple_createColor(1, 0.2f, 1), 0.1f, 0.9f, 0.9f, 200.0f);
+	
+	Mat4 rightWallTransform;
+	mat_mat4MultiplyMat4(RWtr, RWry, rightWallTransform);
+	mat_mat4MultiplyMat4(rightWallTransform, RWrx, rightWallTransform);
+	mat_mat4MultiplyMat4(rightWallTransform, RWsc, rightWallTransform);
+	
+	Sphere rightWall= sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 2, rightWallTransform, floorMat);
+	// Green sphere
+
+	Mat4 gSpheretr;
+	mat_mat4CreateTranslation(gSpheretr, -0.5f, 1, 0.5f);
+	Material gSphereMat = material_createMaterial(tuple_createColor(0.1f, 1, 0.5f), 0.1f, 0.7f, 0.3f, 200.0f);
+	Sphere gSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 3, gSpheretr, gSphereMat);
+
+	// Small green sphere
+	Mat4 smGSphereTr;
+	mat_mat4CreateTranslation(smGSphereTr, 1.5f, 0.5f, -0.5f);
+	Mat4 smGSphereSc;
+	mat_mat4CreateScaling(smGSphereSc, 0.5f, 0.5f, 0.5f);
+
+	Mat4 smGSphereTransform;
+	mat_mat4MultiplyMat4(smGSphereTr, smGSphereSc, smGSphereTransform);
+	Material smGSphereMat = material_createMaterial(tuple_createColor(0.5f, 1, 0.1f), 0.1f, 0.7f, 0.3f, 200.0f);
+	Sphere smGSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 4, smGSphereTransform, smGSphereMat);
+
+	// Small yellow sphere
+	Mat4 smYSphereTr;
+	mat_mat4CreateTranslation(smYSphereTr, -1.5f, 0.33f, -0.75f);
+	Mat4 smYSphereSc;
+	mat_mat4CreateScaling(smYSphereSc, 0.33f, 0.33f, 0.33f);
+
+	Mat4 smYSphereTransform;
+	mat_mat4MultiplyMat4(smYSphereTr, smYSphereSc, smYSphereTransform);
+	Material smYSphereMat = material_createMaterial(tuple_createColor(1, 0.8f, 0.1f), 0.1f, 0.7f, 0.3f, 200.0f);
+	Sphere smYSphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 5, smYSphereTransform, smYSphereMat);
 
 
-	Pointlight pointlight = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
-
-	Mat4 scaling;
-	Mat4 skew;
-	Mat4 trasnform;
-		mat_mat4CreateScaling(scaling, 1, 0.5f, 1);
-	// mat_mat4CreateScaling(scaling, 0.6, 1.2, 1);
-	// mat_mat4CreateShearing(skew, 1, 0, 0, 0, 0, 0);
-
-	// mat_mat4MultiplyMat4(skew, scaling, trasnform);
-
-	// sphere_setTransform(&sphere, trasnform);
-
-	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
-
-	float wall_z = 10;
-	float wall_size = 7;
-	float pixel_size = wall_size/((float)canvas.width);
-	float half = wall_size / 2.0f;
-
-	Tuple rayOrigin = tuple_createPoint(0, 0, -5);
-
-	for (int i = 0; i < canvas.height; i++) {
-		float world_y = half - pixel_size * i; // Converts canvas-space height coordinates(0 to -250) to world space coordinates (3.5 to -3.5)
-
-		for (int j = 0; j < canvas.width; j++){
-			float world_x = -half + pixel_size * j; // Converts canvas-space width coordinates (0 to 250) to world space coordinates(-3.5, 3.5)
-
-			Tuple position = tuple_createPoint(world_x, world_y, wall_z);
-
-			Ray r = ray_createRay(rayOrigin, tuple_vectorNormalize(tuple_tupleSub(position, rayOrigin)));
-			Intersection xss[2];
-			ray_raySphereIntersect(r, sphere, xss);
-			
-			Intersection xs = intersection_determineHit(xss, 2);
 
 
-			if(!isnan(xs.t)) {
-				Tuple point = ray_rayPosition(r, xs.t);
-				Tuple normalv = sphere_normalAt(xs.object, point );
-				Tuple eyev = tuple_tupleNegate(r.direction);
-				
-				
-				drawColor = material_calculateLighting(xs.object.material, pointlight, point , eyev, normalv);
+	//Final init
+	world.sphereCount = 6;
+	world.spheres = malloc(sizeof(Sphere) * world.sphereCount);
+	world.spheres[0] = floor;
+	world.spheres[1] = leftWall;
+	world.spheres[2] = rightWall;
+	world.spheres[3] = gSphere;
+	world.spheres[4] = smGSphere;
+	world.spheres[5] = smYSphere;
 
-				canvas_writePixel(&canvas, drawColor, j, i);
-			}
-		}
-
-	}
+	Canvas canvas = camera_render(camera, world);
 
 	printf("Writing to file...\n");
 	clock_t start_time = clock();

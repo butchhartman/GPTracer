@@ -6,6 +6,8 @@
 #include "Canvas.h"
 #include "Mat.h"
 #include "PPM.h"
+#include "World.h"
+#include "Camera.h"
 #include <time.h>
 
 typedef struct {

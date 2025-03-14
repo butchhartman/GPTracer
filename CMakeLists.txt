@@ -12,7 +12,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 project(GPTracer)
 
-add_compile_options(/W4 /fsanitize=address)
+#add_compile_options(/W4 /fsanitize=address)
 
 execute_process(COMMAND git submodule update --init --recursive)
 
