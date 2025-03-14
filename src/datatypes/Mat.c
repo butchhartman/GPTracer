@@ -102,15 +102,19 @@ float mat_mat3Determinant(Mat3 source)
 	 	  source[0][1]*mat_mat3Cofactor(source,0,1)  + 
 		  source[0][2]*mat_mat3Cofactor(source,0,2) ;
 }
-
+// dest can be one of the components
 void mat_mat4MultiplyMat4(Mat4 mat1, Mat4 mat2, Mat4 dest)
 {
+	Mat4 copy1;
+	mat_mat4Copy(mat1, copy1);
+	Mat4 copy2;
+	mat_mat4Copy(mat2, copy2);
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			(dest)[i][j] = mat1[i][0] * mat2[0][j] +
-						  mat1[i][1] * mat2[1][j] +
-						  mat1[i][2] * mat2[2][j] +
-						  mat1[i][3] * mat2[3][j];
+			(dest)[i][j] = copy1[i][0] * copy2[0][j] +
+						  copy1[i][1] * copy2[1][j] +
+						  copy1[i][2] * copy2[2][j] +
+						  copy1[i][3] * copy2[3][j];
 		}
 	}
 }
@@ -297,4 +301,21 @@ Tuple mat_mat4ChainMatrices(Mat4 rotation, Mat4 scaling, Mat4 translation, Tuple
 
 	Tuple finalPoint = mat_mat4MultuplyTuple(cba, tuple);
     return finalPoint;
+}
+
+void mat_mat4CreateView(Mat4 dest, Tuple from, Tuple to, Tuple up){
+	Tuple forward = tuple_vectorNormalize(tuple_tupleSub(to, from));
+	Tuple upn = tuple_vectorNormalize(up);
+	Tuple left = tuple_vectorCross(forward, upn);
+	Tuple trueUp = tuple_vectorCross(left, forward);
+	
+	Mat4 orientation = {{left.x, left.y, left.z, 0},
+						{trueUp.x, trueUp.y, trueUp.z, 0},
+						{-forward.x, -forward.y, -forward.z, 0},
+						{0, 0, 0, 1}};
+	Mat4 translation;
+	mat_mat4CreateTranslation(translation, -from.x, -from.y, -from.z);
+	mat_mat4MultiplyMat4(orientation, translation, orientation);
+
+	mat_mat4Copy(orientation, dest);
 }

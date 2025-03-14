@@ -40,3 +40,5 @@ void mat_mat4CreateRotation_z(Mat4 dest, float angle);
 void mat_mat4CreateShearing(Mat4 dest, float xpy, float xpz, float ypx, float ypz, float zpx, float zpy);
 
 Tuple mat_mat4ChainMatrices(Mat4 rotation, Mat4 scaling, Mat4 translation, Tuple tuple);
+
+void mat_mat4CreateView(Mat4 dest, Tuple from, Tuple to, Tuple up);

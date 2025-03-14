@@ -595,7 +595,79 @@ void test_mat4Chaining() {
 	
 }
 
+void test_CreateViewMatrix() {
+	Tuple from = tuple_createPoint(0, 0, 0);
+	Tuple to = tuple_createPoint(0, 0, -1);
+	Tuple up = tuple_createVector(0, 1, 0);
+
+	Mat4 viewMatrix;
+	mat_mat4CreateView(viewMatrix, from, to, up);
+	Mat4 iden = MAT4_IDENTITY;
+
+	TEST_ASSERT_TRUE(mat_mat4Compare(viewMatrix, iden));
+}
+
+void test_CreateViewMatrix_posZ() {
+	Tuple from = tuple_createPoint(0, 0, 0);
+	Tuple to = tuple_createPoint(0, 0, 1);
+	Tuple up = tuple_createVector(0, 1, 0);
+
+	Mat4 viewMatrix ;
+	mat_mat4CreateView(viewMatrix, from, to, up);
+	Mat4 iden;
+	mat_mat4CreateScaling(iden, -1, 1, -1);
+
+	TEST_ASSERT_TRUE(mat_mat4Compare(viewMatrix, iden));
+}
+
+void test_CreateViewMatrix_worldMovement() {
+	Tuple from = tuple_createPoint(0, 0, 8);
+	Tuple to = tuple_createPoint(0, 0, 0);
+	Tuple up = tuple_createVector(0, 1, 0);
+
+	Mat4 viewMatrix ;
+	mat_mat4CreateView(viewMatrix, from, to, up);
+	Mat4 iden;
+	mat_mat4CreateTranslation(iden, 0, 0, -8);
+
+	TEST_ASSERT_TRUE(mat_mat4Compare(viewMatrix, iden));
+}
+
+void test_CreateViewMatrix_arbitrary(){
+	Tuple from = tuple_createPoint(1, 3, 2);
+	Tuple to = tuple_createPoint(4, -2, 8);
+	Tuple up = tuple_createVector(1, 1, 0);
+
+	Mat4 viewMatrix ;
+	mat_mat4CreateView(viewMatrix, from, to, up);
+	Mat4 iden;
+	iden[0][0] = -0.50709f;
+	iden[0][1] = 0.50709f; 
+	iden[0][2] = 0.67612f; 
+	iden[0][3] = -2.36643f;
+	iden[1][0] = 0.76772f;
+	iden[1][1] = 0.60609f;
+	iden[1][2] = 0.12122f;
+	iden[1][3] = -2.82843f;
+	iden[2][0] = -0.35857f;
+	iden[2][1] = 0.59761f;
+	iden[2][2] = -0.71714f;
+	iden[2][3] = 0.0f;
+	iden[3][0] = 0.0f;
+	iden[3][1] = 0.0f;
+	iden[3][2] = 0.0f;
+	iden[3][3] = 1.0f;
+
+
+	TEST_ASSERT_TRUE(mat_mat4Compare(viewMatrix, iden));
+}
+
 int main() {
+	RUN_TEST(test_CreateViewMatrix);
+	RUN_TEST(test_CreateViewMatrix_posZ);
+	RUN_TEST(test_CreateViewMatrix_worldMovement);
+	RUN_TEST(test_CreateViewMatrix_arbitrary);
+
 	RUN_TEST(test_mat2ConstructionTest);
 	RUN_TEST(test_mat3ConstructionTest);
 	RUN_TEST(test_mat4ConstructionTest);
