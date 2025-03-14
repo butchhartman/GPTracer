@@ -29,13 +29,15 @@ int main(int argc, char* argv[]) {
 
 	Canvas canvas = canvas_createCanvas(250, 250);
 	Tuple drawColor = tuple_createColor(0.8f, 0.2f, 0.2f);
-	Material mat = material_createMaterial(tuple_createColor(1, 0, 0.2f), 0.1f, 0.9f, 0.9f, 200.0f);
-	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
+	Material mat = material_createMaterial(tuple_createColor(1, 0.2f, 1), 0.1f, 0.9f, 0.9f, 200.0f);
+
+
+	Pointlight pointlight = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
 
 	Mat4 scaling;
 	Mat4 skew;
 	Mat4 trasnform;
-
+		mat_mat4CreateScaling(scaling, 1, 0.5f, 1);
 	// mat_mat4CreateScaling(scaling, 0.6, 1.2, 1);
 	// mat_mat4CreateShearing(skew, 1, 0, 0, 0, 0, 0);
 
@@ -43,6 +45,7 @@ int main(int argc, char* argv[]) {
 
 	// sphere_setTransform(&sphere, trasnform);
 
+	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, scaling, mat);
 
 	float wall_z = 10;
 	float wall_size = 7;
@@ -64,7 +67,16 @@ int main(int argc, char* argv[]) {
 			ray_raySphereIntersect(r, sphere, xss);
 			
 			Intersection xs = intersection_determineHit(xss, 2);
+
+
 			if(!isnan(xs.t)) {
+				Tuple point = ray_rayPosition(r, xs.t);
+				Tuple normalv = sphere_normalAt(xs.object, point );
+				Tuple eyev = tuple_tupleNegate(r.direction);
+				
+				
+				drawColor = material_calculateLighting(xs.object.material, pointlight, point , eyev, normalv);
+
 				canvas_writePixel(&canvas, drawColor, j, i);
 			}
 		}
