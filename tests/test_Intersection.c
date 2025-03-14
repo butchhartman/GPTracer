@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "Intersection.h"
+#include "Ray.h"
 
 void setUp() {
 
@@ -102,6 +103,47 @@ void test_intersectionDetermineHit_manyIntersections() {
     TEST_ASSERT_EQUAL_FLOAT(2.0f, i.t);
 }
 
+void test_prepareComputations() {
+    Ray r = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
+    Material mat = material_createMaterial(tuple_createColor(1, 1, 1), 1, 1, 1, 1);
+    Sphere shape = sphere_createSphere(tuple_createPoint(0 , 0, 0), 1, 0, NULL, mat);
+
+    Intersection i = intersection_intersectionCreateIntersection(shape, 4);
+    Computations comps = intersection_prepareComputations(i, r);
+
+    TEST_ASSERT_TRUE(comps.object.instanceID == i.object.instanceID);
+    TEST_ASSERT_TRUE(floatCompare(comps.t, i.t));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.point, tuple_createPoint(0, 0, -1)));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.eyev, tuple_createVector(0, 0, -1)));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.normalv, tuple_createVector(0, 0, -1)));
+}
+
+void test_prepareComputations_inside() {
+    Ray r = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
+    Material mat = material_createMaterial(tuple_createColor(1, 1, 1), 1, 1, 1, 1);
+    Sphere shape = sphere_createSphere(tuple_createPoint(0 , 0, 0), 1, 0, NULL, mat);
+
+    Intersection i = intersection_intersectionCreateIntersection(shape, 4);
+    Computations comps = intersection_prepareComputations(i, r);
+
+    TEST_ASSERT_FALSE(comps.inside);
+}
+
+void test_prepareComputations_insidetrue() {
+    Ray r = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
+    Material mat = material_createMaterial(tuple_createColor(1, 1, 1), 1, 1, 1, 1);
+    Sphere shape = sphere_createSphere(tuple_createPoint(0 , 0, 0), 1, 0, NULL, mat);
+
+    Intersection i = intersection_intersectionCreateIntersection(shape, 1);
+    Computations comps = intersection_prepareComputations(i, r);
+
+    TEST_ASSERT_TRUE(comps.object.instanceID == i.object.instanceID);
+    TEST_ASSERT_TRUE(floatCompare(comps.t, i.t));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.point, tuple_createPoint(0, 0,  1)));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.eyev, tuple_createVector(0, 0, -1)));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(comps.normalv, tuple_createVector(0, 0, -1)));
+}
+
 int main() {
     RUN_TEST(test_intersectioinCreate);
     RUN_TEST(test_aggregatingIntersections);
@@ -109,5 +151,8 @@ int main() {
     RUN_TEST(test_intersectionDetermineHit_someNegative);
     RUN_TEST(test_intersectionDetermineHit_allNegative);
     RUN_TEST(test_intersectionDetermineHit_manyIntersections);
+    RUN_TEST(test_prepareComputations);
+    RUN_TEST(test_prepareComputations_inside);
+    RUN_TEST(test_prepareComputations_insidetrue);
     return UNITY_END();
 }

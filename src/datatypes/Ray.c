@@ -47,3 +47,24 @@ Ray ray_transformRay(Ray ray, Mat4 transform){
 
     return transformedRay;
 }
+
+Computations intersection_prepareComputations(Intersection intersection, Ray ray){
+    Computations comps;
+
+    comps.t = intersection.t;
+    comps.object = intersection.object;
+
+    comps.point = ray_rayPosition(ray, intersection.t);
+    comps.eyev = tuple_tupleNegate(ray.direction);
+    comps.normalv = sphere_normalAt(comps.object, comps.point);
+
+    if (tuple_vectorDot(comps.normalv, comps.eyev) < 0) {
+        comps.inside = 1;
+        comps.normalv = tuple_tupleNegate(comps.normalv);
+    }
+    else {
+        comps.inside = 0;
+    }
+
+    return comps;
+}

@@ -1,4 +1,5 @@
 #include "Intersection.h"
+#include "Ray.h"
 
 Intersection intersection_intersectionCreateIntersection(Sphere object, float t){
     Intersection i;
@@ -23,3 +24,4 @@ Intersection intersection_determineHit(Intersection *intersections, int length){
 
     return hit;
 }
+

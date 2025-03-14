@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME} "src/GPTracer.c" "src/datatypes/Tuple.c" "src/dat
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/vendor/Unity/src")
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 
 add_subdirectory("vendor/Unity")
 add_subdirectory("tests")

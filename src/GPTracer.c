@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
 	// sphere_setTransform(&sphere, trasnform);
 
-	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, scaling, mat);
+	Sphere sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1, 0, NULL, mat);
 
 	float wall_z = 10;
 	float wall_size = 7;
@@ -83,6 +83,7 @@ int main(int argc, char* argv[]) {
 
 	}
 
+	printf("Writing to file...\n");
 	clock_t start_time = clock();
 	int length;
 	ppm_writePPM(canvas_canvasToPPM(canvas, &length));

@@ -1,5 +1,5 @@
 #include "CommonOperations.h"
-
+#include "Intersection.h"
 const float EPSILON = 0.0001f;
 
 
@@ -27,4 +27,18 @@ int isOdd(int a)
 
 float rad(float angle){
 	return (angle / 180.0f) * (float)M_PI;
+}
+
+
+// Bubble sort implementation from geeks for geeks
+void bubbleSort(Intersection arr[], int n) {
+   for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j].t > arr[j + 1].t && !(arr[j].t - arr[j + 1].t < EPSILON)) {
+                float temp = arr[j].t;
+                arr[j].t = arr[j + 1].t;
+                arr[j + 1].t = temp;
+            } 
+        }
+    }
 }
