@@ -18,3 +18,4 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length);
 Tuple world_shadeHit(World world, Computations comps);
 
 Tuple world_worldColorAt(World world, Ray ray);
+int world_pointInShadow(World world, Tuple point);

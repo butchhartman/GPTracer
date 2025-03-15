@@ -58,7 +58,8 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
 }
 
 Tuple world_shadeHit(World world, Computations comps){
-    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
+    int inShadow = world_pointInShadow(world, comps.overPoint);
+    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
 }
 
 Tuple world_worldColorAt(World world, Ray ray){
@@ -70,4 +71,23 @@ Tuple world_worldColorAt(World world, Ray ray){
     }
     Computations comps = intersection_prepareComputations(hit, ray);
     return world_shadeHit(world, comps);
+}
+
+int world_pointInShadow(World world, Tuple point){
+    Tuple vectorToLs = tuple_tupleSub(world.light.position, point);
+    float distance = tuple_vectorGetMagnitude(vectorToLs);
+    Tuple direction = tuple_vectorNormalize(vectorToLs);
+
+
+    Ray ray = ray_createRay(point, direction);
+    int noXs;
+    Intersection *xs = world_intersectWorld(world, ray, &noXs);
+
+    Intersection hit = intersection_determineHit(xs, noXs);
+    if (!isnan(hit.t) && hit.t < distance) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }

@@ -66,5 +66,7 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
         comps.inside = 0;
     }
 
+    comps.overPoint = tuple_tupleAdd(comps.point, tuple_tupleMuls(comps.normalv, 0.01f)); // EPSILON : The epsilon value here is higher than standard (0.0001) because otherwise it casues acne
+
     return comps;
 }

@@ -16,6 +16,7 @@ typedef struct {
     Tuple point;
     Tuple eyev;
     Tuple normalv;
+    Tuple overPoint;
 } Computations;
 
 

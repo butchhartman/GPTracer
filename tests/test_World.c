@@ -96,6 +96,63 @@ void test_colorAt_inside() {
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, realColor));
 }
 
+void test_inShadow() {
+    World w = world_createDefault();
+    Tuple point = tuple_createPoint(0, 10, 0);
+    TEST_ASSERT_FALSE(world_pointInShadow(w, point));
+}
+
+
+void test_inShadow_2() {
+    World w = world_createDefault();
+    Tuple point = tuple_createPoint(10, -10, 10);
+    TEST_ASSERT_TRUE(world_pointInShadow(w, point));
+}
+
+void test_inShadow_3() {
+    World w = world_createDefault();
+    Tuple point = tuple_createPoint(-20, 20, -20);
+    TEST_ASSERT_FALSE(world_pointInShadow(w, point));
+}
+
+void test_inShadow_4() {
+    World w = world_createDefault();
+    Tuple point = tuple_createPoint(-2, 2, -2);
+    TEST_ASSERT_FALSE(world_pointInShadow(w, point));
+}
+
+void test_inShadow_5() {
+    World w = world_createDefault();
+    w.light = pointlight_createPointlight(tuple_createPoint(0, 0, -10), tuple_createColor(1, 1, 1));
+    Mat4 translation;
+    mat_mat4CreateTranslation(translation, 0, 0, 10);
+    Material mat = w.spheres[0].material;
+    mat.surfaceColor = tuple_createColor(1, 1, 1);
+    mat.ambient = 0.1f;
+    Sphere news = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 1, translation, mat);
+    w.spheres[1] = news;
+
+    Ray ray = ray_createRay(tuple_createPoint(0, 0, 5), tuple_createVector(0, 0, 1));
+    Intersection i = intersection_intersectionCreateIntersection(w.spheres[1], 4.0f);
+    Computations comps = intersection_prepareComputations(i, ray);
+    Tuple c = world_shadeHit(w, comps);
+
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createColor(0.1f, 0.1f, 0.1f), c));
+}
+
+void test_inShadow_offset() {
+    Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
+    Mat4 strans;
+    mat_mat4CreateTranslation(strans,0, 0, 1);
+    Material mat = material_createMaterial(tuple_createColor(1,1,1), 1, 1, 1, 1);
+    Sphere sphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, strans, mat);
+    
+    Intersection i = intersection_intersectionCreateIntersection(sphere, 5);
+    Computations comps = intersection_prepareComputations(i, ray);
+    TEST_ASSERT_TRUE(comps.overPoint.z < -0.0001f/2.0f);
+    TEST_ASSERT_TRUE(comps.point.z > comps.overPoint.z);
+}
+
 int main() {
     RUN_TEST(test_worldInit);
     RUN_TEST(test_worldIntersect);
@@ -104,5 +161,11 @@ int main() {
     RUN_TEST(test_colorAt);
     RUN_TEST(test_colorAt_hit);
     RUN_TEST(test_colorAt_inside);
+    RUN_TEST(test_inShadow);
+    RUN_TEST(test_inShadow_2);
+    RUN_TEST(test_inShadow_3);
+    RUN_TEST(test_inShadow_4);
+    RUN_TEST(test_inShadow_5);
+    RUN_TEST(test_inShadow_offset);
     return UNITY_END();
 }

@@ -10,7 +10,7 @@ Material material_createMaterial(Tuple surfaceColor, float ambient, float diffus
     return newm;    
 }
 
-Tuple material_calculateLighting(Material material, Pointlight light, Tuple point, Tuple eyev, Tuple normalv){
+Tuple material_calculateLighting(Material material, Pointlight light, Tuple point, Tuple eyev, Tuple normalv, int inShadow){
     Tuple effectiveColor = tuple_colorBlend(material.surfaceColor, light.intensity);
 
     Tuple lightv = tuple_vectorNormalize(tuple_tupleSub(light.position, point));
@@ -38,8 +38,14 @@ Tuple material_calculateLighting(Material material, Pointlight light, Tuple poin
         }
 
     }
+    Tuple result;
+    if (inShadow == 0) {
+        result = tuple_tupleAdd(tuple_tupleAdd(ambient, diffuse), specular);
+    }
+    else {
+        result = ambient;
+    }
     // hack to reset the w value so that comparisons function correctly
-    Tuple result = tuple_tupleAdd(tuple_tupleAdd(ambient, diffuse), specular);
-    result.w = 1.0f;
+    result.w = 1;
     return result;
 }
