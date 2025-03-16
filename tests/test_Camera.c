@@ -79,6 +79,7 @@ void test_render() {
     mat_mat4CreateView(c.transform, from, to, up);
 
     Canvas image = camera_render(c, w);
+    Tuple color = canvas_pixelAt(image, 5, 5);
     TEST_ASSERT_TRUE(tuple_tupleCompare(canvas_pixelAt(image, 5, 5), tuple_createColor(0.38066f, 0.47583f, 0.2855f)));
 
 }

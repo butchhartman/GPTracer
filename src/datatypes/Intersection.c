@@ -1,7 +1,7 @@
 #include "Intersection.h"
 #include "Ray.h"
 
-Intersection intersection_intersectionCreateIntersection(Sphere object, float t){
+Intersection intersection_intersectionCreateIntersection(Shape object, float t){
     Intersection i;
     i.object = object;
     i.t = t;

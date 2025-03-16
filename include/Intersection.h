@@ -1,10 +1,10 @@
 #pragma once
-#include "Sphere.h"
+#include "Shape.h"
 
 typedef struct {
-    Sphere object;
+    Shape object;
     float t;
 } Intersection;
 
-Intersection intersection_intersectionCreateIntersection(Sphere object, float t);
+Intersection intersection_intersectionCreateIntersection(Shape object, float t);
 Intersection intersection_determineHit(Intersection *intersections, int length);

@@ -3,27 +3,27 @@
 World world_createDefault(){
     World newWorld;
     newWorld.light = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
-    newWorld.sphereCount = 2;
+    newWorld.objectCount= 2;
     
-    newWorld.spheres = malloc(newWorld.sphereCount * sizeof(Sphere));
+    newWorld.objects = malloc(newWorld.objectCount * sizeof(Shape));
 
     Material sphereMat = material_createMaterial(tuple_createColor(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f, 200.0f);
     Material sphereMat2 = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f);
     Mat4 s2Transform;
     mat_mat4CreateScaling(s2Transform, 0.5, 0.5, 0.5);
 
-    newWorld.spheres[0] = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, sphereMat);
-    newWorld.spheres[1] = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, s2Transform, sphereMat2);
+    //newWorld.objects[0] = sphere_createShape(tuple_createPoint(0, 0, 0), 1, 0, NULL, sphereMat); FIXME : CREATESHAPE FUNC
+    //newWorld.objects[1] = sphere_createShape(tuple_createPoint(0, 0, 0), 1, 0, s2Transform, sphereMat2);
 
     return newWorld;
 }
 
 Intersection *world_intersectWorld(World world, Ray ray, int *length){
     Intersection *xs;
-    xs = malloc(sizeof(Intersection) * world.sphereCount * 2);
+    xs = malloc(sizeof(Intersection) * world.objectCount * 2);
     Intersection txs[2];
-    for (unsigned int i = 0; i < world.sphereCount; i++) {
-        ray_raySphereIntersect(ray, world.spheres[i], txs);
+    for (unsigned int i = 0; i < world.objectCount; i++) {
+        ray_raySphereIntersect(ray, world.objects[i], txs);
         xs[i * 2].t = txs[0].t;
         xs[i * 2 + 1].t = txs[1].t;
         xs[i * 2].object = txs[0].object;
@@ -32,7 +32,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
     // TODO : move to function. 
     //THIS WHOLE FUCKING ERROR WAS CAUSED BY MY DUMBASS FORGETTING TO SORT THE OBJECT OF THE STRUCT WITH THE T VALUE!
     // ONLY SORTING THE T VALUES CAUSED OBJECTS TO BE DRAWN OVER EACH OTHER! I DONT EVEN FUCKING KNOW WHY!!!
-    int n = 2*world.sphereCount;
+    int n = 2*world.objectCount;
     for (int i = 0; i < n - 1; i++) {
         int min = i;
         for (int j = i + 1; j < n; j++) {
@@ -41,19 +41,19 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
         }
        if (min != i) {
             float temp = xs[min].t;
-            Sphere tspmo = xs[min].object;
+            Shape tspmo = xs[min].object;
             xs[min].t = xs[i].t;
             xs[min].object = xs[i].object;
             xs[i].t = temp;
             xs[i].object = tspmo;
         }
     }
-    //bubbleSort(xs, 2*world.sphereCount);
+    //bubbleSort(xs, 2*world.objectCount);
 
-    // for (unsigned int i = 0; i < 2*world.sphereCount; i++) {
+    // for (unsigned int i = 0; i < 2*world.objectCount; i++) {
     //     printf("ARR %d : %f\n", i, xs[i].t);
     // }
-    *length = 2 * world.sphereCount;
+    *length = 2 * world.objectCount;
     return xs;
 }
 

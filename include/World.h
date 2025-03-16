@@ -1,15 +1,15 @@
 #pragma once
 #include <malloc.h>
 #include "Tuple.h"
-#include "Sphere.h"
+#include "Shape.h"
 #include "Pointlight.h"
 #include "Material.h"
 #include "Ray.h"
 #include "Intersection.h"
 typedef struct {
     Pointlight light;
-    Sphere *spheres;
-    unsigned int sphereCount;
+    Shape *objects;
+    unsigned int objectCount;
 } World;
 
 World world_createDefault();
