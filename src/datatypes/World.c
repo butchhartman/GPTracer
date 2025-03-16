@@ -70,7 +70,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
 
 Tuple world_shadeHit(World world, Computations comps){
     int inShadow = world_pointInShadow(world, comps.overPoint);
-    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
+    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow, comps.object); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
 }
 
 Tuple world_worldColorAt(World world, Ray ray){

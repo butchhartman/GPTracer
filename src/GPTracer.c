@@ -45,6 +45,8 @@ int main(int argc, char* argv[]) {
 	Shape sphere3 = shape_createDefaultShape(3, Sphere);
 	Shape sphere4 = shape_createDefaultShape(4, Sphere);
 
+	Mat4 sRy;
+	
 	Mat4 sTr;
 	mat_mat4CreateTranslation(sTr, 0, 1.5f, 3);
 	mat_mat4Copy(sTr, sphere.transform);
@@ -55,8 +57,17 @@ int main(int argc, char* argv[]) {
 	mat_mat4CreateTranslation(sTr, -2.2f, 2.2f, -1.2f);
 	mat_mat4Copy(sTr, sphere4.transform);
 
+	// TODO : GENERALIZE PATTERNS
+
+	mat_mat4CreateRotation_y(sRy, rad(70));
+	mat_mat4MultiplyMat4(sphere.transform, sRy, sphere.transform);
+
+	Mat4 patScale;
+	mat_mat4CreateScaling(patScale, 0.1, 0.1, 0.1);
+
 	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f);
 	floorMat.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
+	mat_mat4Copy(patScale, floorMat.pattern.transform);
 	plane.material = floorMat;
 
 	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f);

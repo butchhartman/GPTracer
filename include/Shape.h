@@ -18,6 +18,12 @@ Shape shape_assignMaterial(Shape shape, Material mat);
 
 Tuple shape_normalAt(Shape shape, Tuple point);
 Tuple shape_sphereNormalAt(Shape sphere, Tuple point);
+
+Tuple pattern_stripeAtObject(Pattern pattern, Shape object, Tuple worldPoint);
+
+
+Tuple material_calculateLighting(Material material, Pointlight light, Tuple point, Tuple eyev, Tuple normalv, int inShadow, Shape object);
+
 // Shape sphere_createSphere(Tuple origin, int radius, unsigned int instanceID, Mat4 transform, Material material, enum Formfactor formfactor);
 // void sphere_setTransform(Shape *sphere, Mat4 transform);
 

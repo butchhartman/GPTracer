@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "World.h"
 #include "Patterns.h"
+#include "Shape.h"
 void setUp() {
 
 }
@@ -27,7 +28,7 @@ void test_materialLighting_angle0() {
     Tuple eyev = tuple_createVector(0, 0, -1);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 0, -10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0, shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(1.9f, 1.9f, 1.9f)));
 }
@@ -40,7 +41,7 @@ void test_materialLighting_angle45() {
     Tuple eyev = tuple_createVector(0, sqrtf(2.0f)/2.0f, -sqrtf(2.0f)/2.0f);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 0, -10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0, shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(1.0f, 1.0f, 1.0f)));
 }
@@ -53,7 +54,7 @@ void test_materialLighting_angle0l45() {
     Tuple eyev = tuple_createVector(0, 0, -1);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 10, -10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0, shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(0.7364f, 0.7364f, 0.7364f)));
 }
@@ -66,7 +67,7 @@ void test_materialLighting_angleneg45l45() {
     Tuple eyev = tuple_createVector(0, -sqrtf(2.0f)/2.0f, -sqrt(2.0f)/2.0f);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 10, -10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0,shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(1.6364f, 1.6364f, 1.6364f)));
 }
@@ -79,7 +80,7 @@ void test_materialLighting_lightoccluded() {
     Tuple eyev = tuple_createVector(0, 0, -1);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 0, 10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 0,shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(0.1f, 0.1f, 0.1f)));
 }
@@ -91,7 +92,7 @@ void test_materialLighting_shadow() {
     Tuple eyev = tuple_createVector(0, 0, -1);
     Tuple normalv = tuple_createVector(0, 0, -1);
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0 , 0, -10), tuple_createColor(1, 1, 1));
-    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 1);
+    Tuple result = material_calculateLighting(m, light, position, eyev, normalv, 1,shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(0.1f, 0.1f, 0.1f)));
 }
@@ -108,8 +109,8 @@ void test_materialLighting_pattern() {
     
     Pointlight light = pointlight_createPointlight(tuple_createPoint(0, 0, -10), tuple_createColor(1, 1, 1));
 
-    Tuple c1 = material_calculateLighting(mat, light, tuple_createPoint(0.9f, 0, 0), eyev, normalv, 0);
-    Tuple c2 = material_calculateLighting(mat, light, tuple_createPoint(1.1f, 0, 0), eyev, normalv, 0);
+    Tuple c1 = material_calculateLighting(mat, light, tuple_createPoint(0.9f, 0, 0), eyev, normalv, 0,shape_createDefaultShape(0, Sphere));
+    Tuple c2 = material_calculateLighting(mat, light, tuple_createPoint(1.1f, 0, 0), eyev, normalv, 0,shape_createDefaultShape(0, Sphere));
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(c1, tuple_createColor(1,1,1)));
     TEST_ASSERT_TRUE(tuple_tupleCompare(c2, tuple_createColor(0,0,0)));
