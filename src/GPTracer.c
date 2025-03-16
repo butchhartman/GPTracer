@@ -37,9 +37,11 @@ int main(int argc, char* argv[]) {
 	mat_mat4Copy(sTr, sphere4.transform);
 
 	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f);
+	floorMat.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
 	plane.material = floorMat;
 
 	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f);
+	material.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
 	sphere.material = material;
 	sphere2.material = material;
 	sphere3.material = material;
@@ -63,9 +65,9 @@ int main(int argc, char* argv[]) {
 	w.objects[5] = wall;
 
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(0, 6.3f, -7.5), tuple_createPoint(0, 1.6f, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(5.7f, 6.3f, -5.76f), tuple_createPoint(0, 1.6f, 0), tuple_createVector(0, 1, 0));
 
-	Camera camera = camera_createCamera(1280, 720, rad(55), viewMatrix);
+	Camera camera = camera_createCamera(320, 240, rad(55), viewMatrix);
 
 	Canvas canvas =	camera_render(camera, w);
 	double endMathTime = (double)(clock() - mathTime) / CLOCKS_PER_SEC;

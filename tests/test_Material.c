@@ -3,7 +3,7 @@
 #include "unity.h"
 #include "Material.h"
 #include "World.h"
-
+#include "Patterns.h"
 void setUp() {
 
 }
@@ -95,6 +95,25 @@ void test_materialLighting_shadow() {
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(result, tuple_createColor(0.1f, 0.1f, 0.1f)));
 }
+
+void test_materialLighting_pattern() {
+    Material mat;
+    mat.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
+    mat.ambient = 1;
+    mat.diffuse = 0;
+    mat.specular = 0;
+    mat.shininess = 0;
+    Tuple eyev = tuple_createVector(0, 0, -1);
+    Tuple normalv = tuple_createVector(0, 0, -1);
+    
+    Pointlight light = pointlight_createPointlight(tuple_createPoint(0, 0, -10), tuple_createColor(1, 1, 1));
+
+    Tuple c1 = material_calculateLighting(mat, light, tuple_createPoint(0.9f, 0, 0), eyev, normalv, 0);
+    Tuple c2 = material_calculateLighting(mat, light, tuple_createPoint(1.1f, 0, 0), eyev, normalv, 0);
+
+    TEST_ASSERT_TRUE(tuple_tupleCompare(c1, tuple_createColor(1,1,1)));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(c2, tuple_createColor(0,0,0)));
+}
 int main() {
     RUN_TEST(test_createMaterial);
     RUN_TEST(test_materialLighting_angle0);
@@ -103,5 +122,6 @@ int main() {
     RUN_TEST(test_materialLighting_angleneg45l45);
     RUN_TEST(test_materialLighting_lightoccluded);
     RUN_TEST(test_materialLighting_shadow);
+    RUN_TEST(test_materialLighting_pattern);
     return UNITY_END();
 }

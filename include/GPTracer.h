@@ -8,6 +8,7 @@
 #include "PPM.h"
 #include "World.h"
 #include "Camera.h"
+#include "Patterns.h"
 #include <time.h>
 
 typedef struct {

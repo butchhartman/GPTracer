@@ -7,11 +7,21 @@ Material material_createMaterial(Tuple surfaceColor, float ambient, float diffus
     newm.diffuse = diffuse;
     newm.specular = specular;
     newm.shininess = shininess;
+    newm.pattern = pattern_stripe(tuple_createColor(-1, -1, -1), tuple_createColor(-1, -1, -1));
     return newm;    
 }
 
 Tuple material_calculateLighting(Material material, Pointlight light, Tuple point, Tuple eyev, Tuple normalv, int inShadow){
-    Tuple effectiveColor = tuple_colorBlend(material.surfaceColor, light.intensity);
+    Tuple originalColor;
+    
+    if (material.pattern.a.x != -1 && material.pattern.b.x != -1) { // if a pattern is set, negative RGV values are invalid and used to represent not a color
+        originalColor = pattern_stripeAt(material.pattern, point);
+    } 
+    else  {
+        originalColor = material.surfaceColor;
+    }
+
+    Tuple effectiveColor = tuple_colorBlend(originalColor, light.intensity);
 
     Tuple lightv = tuple_vectorNormalize(tuple_tupleSub(light.position, point));
 

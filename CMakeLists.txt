@@ -16,7 +16,7 @@ project(GPTracer)
 
 execute_process(COMMAND git submodule update --init --recursive)
 
-add_executable(${PROJECT_NAME} "src/GPTracer.c" "src/datatypes/Tuple.c" "src/datatypes/Canvas.c" "src/PPM.c" "src/datatypes/Mat.c" "src/CommonOperations.c" "src/datatypes/Ray.c" "src/datatypes/Shape.c" "src/datatypes/Intersection.c" "src/datatypes/Material.c" "src/datatypes/Pointlight.c" "src/datatypes/Camera.c" "src/datatypes/World.c")
+add_executable(${PROJECT_NAME} "src/GPTracer.c" "src/datatypes/Tuple.c" "src/datatypes/Canvas.c" "src/PPM.c" "src/datatypes/Mat.c" "src/CommonOperations.c" "src/datatypes/Ray.c" "src/datatypes/Shape.c" "src/datatypes/Intersection.c" "src/datatypes/Material.c" "src/datatypes/Pointlight.c" "src/datatypes/Camera.c" "src/datatypes/World.c" "src/datatypes/Patterns.c")
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/vendor/Unity/src")
