@@ -16,6 +16,25 @@ void tick(Environment e, Projectile *p) {
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
 int main(int argc, char* argv[]) {
+	int width, height = 0;
+
+	if (argc > 1) {
+		for (int i = 0; i < argc; i++) {
+			if (strcmp(argv[i], "-h") == 0) {
+				width = atoi(argv[i+1]);
+			}
+
+			if (strcmp(argv[i], "-w") == 0) {
+				height = atoi(argv[i+1]);
+			}
+
+		}
+	}
+
+	if (height == 0 || width == 0) {
+		return -1;
+	}
+
 	clock_t mathTime = clock();
 	World w; 
 
@@ -67,7 +86,7 @@ int main(int argc, char* argv[]) {
 	Mat4 viewMatrix;
 	mat_mat4CreateView(viewMatrix, tuple_createPoint(5.7f, 6.3f, -5.76f), tuple_createPoint(0, 1.6f, 0), tuple_createVector(0, 1, 0));
 
-	Camera camera = camera_createCamera(320, 240, rad(55), viewMatrix);
+	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 
 	Canvas canvas =	camera_render(camera, w);
 	double endMathTime = (double)(clock() - mathTime) / CLOCKS_PER_SEC;
