@@ -24,8 +24,9 @@ typedef struct {
 Ray ray_createRay(Tuple origin, Tuple direction);
 Tuple ray_rayPosition(Ray ray, float t);
 
-Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection* dest);
-void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection* dest);
+Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection** dest, int *length);
+void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection** dest, int *length);
+void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *length);
 
 Ray ray_transformRay(Ray ray, Mat4 transform);
 

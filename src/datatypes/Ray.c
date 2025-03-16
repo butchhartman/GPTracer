@@ -1,5 +1,5 @@
 #include "Ray.h"
-
+#include "malloc.h"
 Ray ray_createRay(Tuple origin, Tuple direction){
     Ray newRay;
     newRay.origin = origin;
@@ -12,7 +12,7 @@ Tuple ray_rayPosition(Ray ray, float t){
 }
 
 // Calls shape-specific intersect functions based on the shape's formfactor
-Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection *dest){
+Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection **dest, int *length){
     Mat4 invSphereTransform;
     mat_mat4Inverse(shape.transform, invSphereTransform);
 
@@ -21,7 +21,11 @@ Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection *dest){
     switch (shape.formfactor){
 
         case (Sphere):
-            ray_raySphereIntersect(transformedRay, shape, dest);
+            ray_raySphereIntersect(transformedRay, shape, dest, length);
+            break;
+
+        case(Plane):
+            ray_rayPlaneIntersect(transformedRay, shape, dest, length);
             break;
 
         default:
@@ -32,8 +36,15 @@ Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection *dest){
     return transformedRay;
 }
 
-void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection *dest)
+void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection **dest, int *length) // TODO : REFACTOR TO MAKE THIS UTILIZE MALLOC AND RETURN A LENGTH
 {
+    *dest = malloc(sizeof(Intersection) * 2);
+    *length = 2;
+
+    if (*dest == NULL) {
+        return;
+    }
+
     Tuple vectorSphereToRay = tuple_tupleSub(ray.origin, sphere.origin);
     
     float a = tuple_vectorDot(ray.direction, ray.direction);
@@ -41,22 +52,36 @@ void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection *dest)
     float c = tuple_vectorDot(vectorSphereToRay, vectorSphereToRay) - 1; // This value is a constant - 1, but im assuming its the sphere radius
 
     float discriminant = powf(b, 2) - 4 * a * c;
-   
+  
 
     if (discriminant < 0) {
     
-        dest[0].object = sphere;
-        dest[0].t = NAN;
-        dest[1].object = sphere;
-        dest[1].t = NAN; 
+        (*dest)[0].object = sphere;
+        (*dest)[0].t = NAN;
+        (*dest)[1].object = sphere;
+        (*dest)[1].t = NAN; 
     } 
     else {
-        dest[0].object = sphere;
-        dest[0].t =  (-b - sqrtf(discriminant)) / (2.0f * a);
-        dest[1].object = sphere;
-        dest[1].t = (-b + sqrtf(discriminant)) / (2.0f * a);
+        (*dest)[0].object = sphere;
+        (*dest)[0].t =  (-b - sqrtf(discriminant)) / (2.0f * a);
+        (*dest)[1].object = sphere;
+        (*dest)[1].t = (-b + sqrtf(discriminant)) / (2.0f * a);
     }
 }
+
+void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *length){
+    *dest = malloc(sizeof(Intersection));
+    *length = 1;
+    (*dest)[0].object = plane;
+    
+    if (fabsf(ray.direction.y) < 0.0001) { // EPSILON
+        (*dest)[0].t = NAN;
+    } else {
+        (*dest)[0].t = -ray.origin.y / ray.direction.y;
+    }
+
+}
+
 
 Ray ray_transformRay(Ray ray, Mat4 transform){
     Ray transformedRay;

@@ -35,10 +35,11 @@ void test_rayShapeIntersection() {
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
 
-    Intersection intersections[2];
-    ray_rayShapeIntersect(ray, sphere, intersections);
+    int length;
+    Intersection *intersections = NULL;
+    ray_rayShapeIntersect(ray, sphere, &intersections, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(intersections)/sizeof(intersections[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(4.0f, intersections[0].t);
     TEST_ASSERT_EQUAL_FLOAT(6.0f, intersections[1].t);
     TEST_ASSERT_EQUAL_INT(0, intersections[0].object.instanceID);
@@ -51,11 +52,12 @@ void test_rayShapeIntersection_tangent() {
     Ray ray = ray_createRay(tuple_createPoint(0, 1, -5), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
+    
+    int length;
+    Intersection *intersections = NULL;
+    ray_rayShapeIntersect(ray, sphere, &intersections, &length);
 
-    Intersection intersections[2];
-    ray_rayShapeIntersect(ray, sphere, intersections);
-
-    TEST_ASSERT_EQUAL_INT(2, sizeof(intersections)/sizeof(intersections[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(5.0f, intersections[0].t);
     TEST_ASSERT_EQUAL_FLOAT(5.0f, intersections[1].t);
     TEST_ASSERT_EQUAL_INT(0, intersections[0].object.instanceID);
@@ -68,10 +70,11 @@ void test_rayShapeIntersection_Miss(){
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
 
-    Intersection intersections[2];
-    ray_rayShapeIntersect(ray, sphere, intersections);
+    int length;
+    Intersection *intersections = NULL;
+    ray_rayShapeIntersect(ray, sphere, &intersections, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(intersections)/sizeof(intersections[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(NAN, intersections[0].t);
     TEST_ASSERT_EQUAL_FLOAT(NAN, intersections[1].t);
     TEST_ASSERT_EQUAL_INT(0, intersections[0].object.instanceID);
@@ -84,10 +87,11 @@ void test_rayShapeIntersect_insideSphere() {
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
 
-    Intersection intersections[2];
-    ray_rayShapeIntersect(ray, sphere, intersections);
+    int length;
+    Intersection *intersections = NULL;
+    ray_rayShapeIntersect(ray, sphere, &intersections, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(intersections)/sizeof(intersections[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(-1.0f, intersections[0].t);
     TEST_ASSERT_EQUAL_FLOAT(1.0f, intersections[1].t);
     TEST_ASSERT_EQUAL_INT(0, intersections[0].object.instanceID);
@@ -100,10 +104,11 @@ void test_rayShapeIntersect_behind() {
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
 
-    Intersection intersections[2];
-    ray_rayShapeIntersect(ray, sphere, intersections);
+    int length;
+    Intersection *intersections = NULL;
+    ray_rayShapeIntersect(ray, sphere, &intersections, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(intersections)/sizeof(intersections[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(-6.0f, intersections[0].t);
     TEST_ASSERT_EQUAL_FLOAT(-4.0f, intersections[1].t);
     TEST_ASSERT_EQUAL_INT(0, intersections[0].object.instanceID);
@@ -139,10 +144,11 @@ void test_rayScaledShape() {
     s.material = mat;
     mat_mat4Copy(scale, s.transform);
 
-    Intersection xs[2];
-    ray_rayShapeIntersect(ray, s, xs);
+    int length;
+    Intersection *xs = NULL;
+    ray_rayShapeIntersect(ray, s, &xs, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(xs) / sizeof(xs[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(3.0f, xs[0].t);
     TEST_ASSERT_EQUAL_FLOAT(7.0f, xs[1].t);
 }
@@ -156,10 +162,11 @@ void test_rayTranslatedShape() {
     s.material = mat;
     mat_mat4Copy(translation, s.transform);
 
-    Intersection xs[2];
-    ray_rayShapeIntersect(ray, s, xs);
+    int length;
+    Intersection *xs = NULL;
+    ray_rayShapeIntersect(ray, s, &xs, &length);
 
-    TEST_ASSERT_EQUAL_INT(2, sizeof(xs) / sizeof(xs[0]));
+    TEST_ASSERT_EQUAL_INT(2, length);
     TEST_ASSERT_EQUAL_FLOAT(NAN , xs[0].t);
     TEST_ASSERT_EQUAL_FLOAT(NAN , xs[1].t);
 

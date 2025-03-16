@@ -140,8 +140,9 @@ void test_intersectingScaledShapeRay() {
     mat_mat4CreateScaling(Scaling, 2, 2, 2);
     mat_mat4Copy(Scaling, testShape.transform);
     
-    Intersection xs[2]; 
-    Ray transformedRay = ray_rayShapeIntersect(r, testShape, xs);
+    int length;
+    Intersection *xs; 
+    Ray transformedRay = ray_rayShapeIntersect(r, testShape, &xs, &length);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(0, 0, -2.5f), transformedRay.origin));
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0, 0.5f), transformedRay.direction));
@@ -155,8 +156,9 @@ void test_intersectingTranslatedShapeRay() {
     mat_mat4CreateTranslation(translated, 5, 0, 0);
     mat_mat4Copy(translated, testShape.transform);
 
-    Intersection xs[2]; 
-    Ray transformedRay = ray_rayShapeIntersect(r, testShape, xs);
+    int length;
+    Intersection *xs; 
+    Ray transformedRay = ray_rayShapeIntersect(r, testShape, &xs, &length);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(-5, 0, -5), transformedRay.origin));
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0, 1), transformedRay.direction));
@@ -193,6 +195,71 @@ void test_shapeNormalAtTransformed() {
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0.97014f, -0.24255), n));
 }
 
+void test_planeNormalAt() {
+    Shape p = shape_createDefaultShape(0, Plane);
+
+    Tuple n1 = shape_normalAt(p, tuple_createPoint(0, 0, 0));
+    Tuple n2 = shape_normalAt(p, tuple_createPoint(10, 0, -10));
+    Tuple n3 = shape_normalAt(p, tuple_createPoint(-5, 0, 150));
+
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 1, 0), n1));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 1, 0), n2));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 1, 0), n3));
+
+}
+
+void test_planeParallelRay() {
+    Shape p = shape_createDefaultShape(0, Plane);
+
+    Ray r = ray_createRay(tuple_createPoint(0, 10, 0), tuple_createVector(0, 0, 1));
+
+    int length;
+    Intersection *xs;
+    ray_rayShapeIntersect(r, p, &xs, &length);
+
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+}
+
+void test_planeCoplanarRay() {
+    Shape p = shape_createDefaultShape(0, Plane);
+
+    Ray r = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
+
+    int length;
+    Intersection *xs;
+    ray_rayShapeIntersect(r, p, &xs, &length);
+
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+}
+
+void test_planeRayAbove() {
+    Shape p = shape_createDefaultShape(10, Plane);
+
+    Ray r = ray_createRay(tuple_createPoint(0, 1, 0), tuple_createVector(0, -1, 0));
+
+    int length;
+    Intersection *xs;
+    ray_rayShapeIntersect(r, p, &xs, &length);
+
+    TEST_ASSERT_EQUAL_INT(1, length);
+    TEST_ASSERT_EQUAL_INT(1, xs[0].t);
+    TEST_ASSERT_TRUE(xs[0].object .instanceID == p.instanceID);
+}
+
+void test_planeRayBelow() {
+    Shape p = shape_createDefaultShape(10, Plane);
+
+    Ray r = ray_createRay(tuple_createPoint(0, -1, 0), tuple_createVector(0, 1, 0));
+
+    int length;
+    Intersection *xs;
+    ray_rayShapeIntersect(r, p, &xs, &length);
+
+    TEST_ASSERT_EQUAL_INT(1, length);
+    TEST_ASSERT_EQUAL_INT(1, xs[0].t);
+    TEST_ASSERT_TRUE(xs[0].object .instanceID == p.instanceID);
+}
+
 int main() {
     RUN_TEST(test_DefaultShapeMaterial);
     RUN_TEST(test_DefaultShapeAssignMaterial);
@@ -202,5 +269,10 @@ int main() {
     RUN_TEST(test_intersectingScaledShapeRay);
     RUN_TEST(test_shapeNormalAtTranslated);
     RUN_TEST(test_shapeNormalAtTransformed);
+    RUN_TEST(test_planeCoplanarRay);
+    RUN_TEST(test_planeNormalAt);
+    RUN_TEST(test_planeParallelRay);
+    RUN_TEST(test_planeRayAbove);
+    RUN_TEST(test_planeRayBelow);
     return UNITY_END();
 }
