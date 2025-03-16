@@ -16,7 +16,18 @@ void tick(Environment e, Projectile *p) {
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
 int main(int argc, char* argv[]) {
-	Canvas canvas;
+	World w = world_createDefault();
+
+	Pointlight light = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
+
+	w.light = light;
+
+	Mat4 viewMatrix;
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(0, 0, -3.5), tuple_createPoint(0, 0, 0), tuple_createVector(0, 1, 0));
+
+	Camera camera = camera_createCamera(250, 250, rad(55), viewMatrix);
+
+	Canvas canvas =	camera_render(camera, w);
 
 	printf("Writing to file...\n");
 	clock_t start_time = clock();
