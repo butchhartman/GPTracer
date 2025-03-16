@@ -74,7 +74,7 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
 
     comps.point = ray_rayPosition(ray, comps.t);
     comps.eyev = tuple_tupleNegate(ray.direction);
-    // comps.normalv = sphere_normalAt(comps.object, comps.point); FIXME : NEW NORMAL CALC FUNC
+    comps.normalv = shape_normalAt(intersection.object, comps.point); 
 
     if (tuple_vectorDot(comps.normalv, comps.eyev) < 0) {
         comps.inside = 1;
