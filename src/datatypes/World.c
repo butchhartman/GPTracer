@@ -12,8 +12,14 @@ World world_createDefault(){
     Mat4 s2Transform;
     mat_mat4CreateScaling(s2Transform, 0.5, 0.5, 0.5);
 
-    //newWorld.objects[0] = sphere_createShape(tuple_createPoint(0, 0, 0), 1, 0, NULL, sphereMat); FIXME : CREATESHAPE FUNC
-    //newWorld.objects[1] = sphere_createShape(tuple_createPoint(0, 0, 0), 1, 0, s2Transform, sphereMat2);
+    Shape s1 = shape_createDefaultShape(0, Sphere);
+    s1.material = sphereMat;
+    Shape s2 = shape_createDefaultShape(1, Sphere);
+   s2.material = sphereMat2;
+   mat_mat4Copy(s2Transform, s2.transform); 
+
+    newWorld.objects[0] = s1; 
+    newWorld.objects[1] = s2;
 
     return newWorld;
 }
@@ -23,7 +29,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
     xs = malloc(sizeof(Intersection) * world.objectCount * 2);
     Intersection txs[2];
     for (unsigned int i = 0; i < world.objectCount; i++) {
-        ray_raySphereIntersect(ray, world.objects[i], txs);
+        ray_rayShapeIntersect(ray, world.objects[i], txs);
         xs[i * 2].t = txs[0].t;
         xs[i * 2 + 1].t = txs[1].t;
         xs[i * 2].object = txs[0].object;
