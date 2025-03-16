@@ -10,7 +10,6 @@ void tearDown(){
 
 }
 
-/*
 void test_rayCreate() {
     Tuple origin = tuple_createPoint(1, 2, 3);
     Tuple direction = tuple_createVector(4, 5, 6);
@@ -33,7 +32,8 @@ void test_rayPosition() {
 void test_rayShapeIntersection() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
-    Shape sphere = sphere_createSphere(tuple_createPoint(0, 0, 0), 1.0f, 0, NULL, mat);
+    Shape sphere = shape_createDefaultShape(0, Sphere); 
+    sphere.material = mat;
 
     Intersection intersections[2];
     ray_rayShapeIntersect(ray, sphere, intersections);
@@ -49,7 +49,8 @@ void test_rayShapeIntersection() {
 void test_rayShapeIntersection_tangent() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 1, -5), tuple_createVector(0, 0, 1));
-    Shape sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1.0f, 0, NULL, mat);
+    Shape sphere = shape_createDefaultShape(0, Sphere); 
+    sphere.material = mat;
 
     Intersection intersections[2];
     ray_rayShapeIntersect(ray, sphere, intersections);
@@ -64,7 +65,8 @@ void test_rayShapeIntersection_tangent() {
 void test_rayShapeIntersection_Miss(){
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 2, -5), tuple_createVector(0, 0, 1));
-    Shape sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1.0f, 0, NULL, mat);
+    Shape sphere = shape_createDefaultShape(0, Sphere); 
+    sphere.material = mat;
 
     Intersection intersections[2];
     ray_rayShapeIntersect(ray, sphere, intersections);
@@ -79,7 +81,8 @@ void test_rayShapeIntersection_Miss(){
 void test_rayShapeIntersect_insideSphere() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
-    Shape sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1.0f, 0, NULL, mat);
+    Shape sphere = shape_createDefaultShape(0, Sphere); 
+    sphere.material = mat;
 
     Intersection intersections[2];
     ray_rayShapeIntersect(ray, sphere, intersections);
@@ -94,7 +97,8 @@ void test_rayShapeIntersect_insideSphere() {
 void test_rayShapeIntersect_behind() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 5), tuple_createVector(0, 0, 1));
-    Shape sphere = sphere_createSphere(tuple_createPoint(0,0,0), 1.0f, 0, NULL, mat);
+    Shape sphere = shape_createDefaultShape(0, Sphere); 
+    sphere.material = mat;
 
     Intersection intersections[2];
     ray_rayShapeIntersect(ray, sphere, intersections);
@@ -129,10 +133,11 @@ void test_rayScale() {
 void test_rayScaledShape() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
-    Shape s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
+    Shape s = shape_createDefaultShape(0, Sphere); 
     Mat4 scale;
     mat_mat4CreateScaling(scale, 2, 2, 2);
-    sphere_setTransform(&s, scale);
+    s.material = mat;
+    mat_mat4Copy(scale, s.transform);
 
     Intersection xs[2];
     ray_rayShapeIntersect(ray, s, xs);
@@ -145,10 +150,11 @@ void test_rayScaledShape() {
 void test_rayTranslatedShape() {
     Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
-    Shape s = sphere_createSphere(tuple_createPoint(0, 0, 0), 1, 0, NULL, mat);
+    Shape s = shape_createDefaultShape(0, Sphere); 
     Mat4 translation;
     mat_mat4CreateTranslation(translation, 5, 0, 0);
-    sphere_setTransform(&s, translation);
+    s.material = mat;
+    mat_mat4Copy(translation, s.transform);
 
     Intersection xs[2];
     ray_rayShapeIntersect(ray, s, xs);
@@ -158,9 +164,9 @@ void test_rayTranslatedShape() {
     TEST_ASSERT_EQUAL_FLOAT(NAN , xs[1].t);
 
 }
-    */
+
 int main() {
-    /*RUN_TEST(test_rayCreate);
+    RUN_TEST(test_rayCreate);
     RUN_TEST(test_rayPosition);
     RUN_TEST(test_rayShapeIntersection);
     RUN_TEST(test_rayShapeIntersect_behind);
@@ -171,7 +177,6 @@ int main() {
     RUN_TEST(test_rayScale);
     RUN_TEST(test_rayScaledShape);
     RUN_TEST(test_rayTranslatedShape);
-    */
     return UNITY_END();
 }
 
