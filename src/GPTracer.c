@@ -16,19 +16,60 @@ void tick(Environment e, Projectile *p) {
 * The translation after the rotation is to move the points from coordinate space to canvas space.
 */
 int main(int argc, char* argv[]) {
-	World w = world_createDefault();
+	clock_t mathTime = clock();
+	World w; 
 
 	Pointlight light = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
+	Shape plane = shape_createDefaultShape(0, Plane);
+	Shape sphere = shape_createDefaultShape(1, Sphere);
+	Shape sphere2 = shape_createDefaultShape(2, Sphere);
+	Shape sphere3 = shape_createDefaultShape(3, Sphere);
+	Shape sphere4 = shape_createDefaultShape(4, Sphere);
 
+	Mat4 sTr;
+	mat_mat4CreateTranslation(sTr, 0, 1.5f, 3);
+	mat_mat4Copy(sTr, sphere.transform);
+	mat_mat4CreateTranslation(sTr, 3.2f, 1.2f, -2);
+	mat_mat4Copy(sTr, sphere2.transform);
+	mat_mat4CreateTranslation(sTr, -4.6f, 1.8f, 1.2f);
+	mat_mat4Copy(sTr, sphere3.transform);
+	mat_mat4CreateTranslation(sTr, -2.2f, 2.2f, -1.2f);
+	mat_mat4Copy(sTr, sphere4.transform);
+
+	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f);
+	plane.material = floorMat;
+
+	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f);
+	sphere.material = material;
+	sphere2.material = material;
+	sphere3.material = material;
+	sphere4.material = material;
+
+	Mat4 rx;
+	mat_mat4CreateRotation_x(rx, rad(90));
+	mat_mat4CreateTranslation(sTr, 0, 0, 7);
+	Shape wall = shape_createDefaultShape(5, Plane);
+	wall.material = floorMat;
+	mat_mat4MultiplyMat4(sTr, rx, wall.transform);
+	
 	w.light = light;
+	w.objectCount = 6;
+	w.objects = malloc(sizeof(Shape) * w.objectCount);
+	w.objects[0] = plane;
+	w.objects[1] = sphere;
+	w.objects[2] = sphere2;
+	w.objects[3] = sphere3;
+	w.objects[4] = sphere4;
+	w.objects[5] = wall;
 
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(0, 0, -3.5), tuple_createPoint(0, 0, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(0, 6.3f, -7.5), tuple_createPoint(0, 1.6f, 0), tuple_createVector(0, 1, 0));
 
-	Camera camera = camera_createCamera(250, 250, rad(55), viewMatrix);
+	Camera camera = camera_createCamera(1280, 720, rad(55), viewMatrix);
 
 	Canvas canvas =	camera_render(camera, w);
-
+	double endMathTime = (double)(clock() - mathTime) / CLOCKS_PER_SEC;
+	printf("Program took %f seconds to compute rendering calculations", endMathTime);
 	printf("Writing to file...\n");
 	clock_t start_time = clock();
 	int length;

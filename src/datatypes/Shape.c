@@ -35,7 +35,9 @@ Tuple shape_normalAt(Shape shape, Tuple point){
             break;
         
         case (Plane):
-            localNormal = tuple_createVector(0, 1, 0); // Planes are flat, with a constant normal vector throughout.    
+            localNormal = tuple_createVector(0, 1, 0); // Planes are flat, with a constant normal vector throughout.   
+            break; 
+
         default:
             break;
     }

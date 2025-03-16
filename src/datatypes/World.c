@@ -26,14 +26,19 @@ World world_createDefault(){
 
 Intersection *world_intersectWorld(World world, Ray ray, int *length){
     Intersection *xs;
-    xs = malloc(sizeof(Intersection) * world.objectCount * 2);
+    xs = malloc(sizeof(Intersection) * world.objectCount * 2); // If objects can ever have more than two intersections this will cause problems
     Intersection *txs;
     for (unsigned int i = 0; i < world.objectCount; i++) {
         ray_rayShapeIntersect(ray, world.objects[i], &txs, length);
-        xs[i * 2].t = txs[0].t;
-        xs[i * 2 + 1].t = txs[1].t;
-        xs[i * 2].object = txs[0].object;
-        xs[i * 2 + 1].object = txs[1].object;
+        
+        for (int j = 0; j < *length; j++) {
+            xs[j * 2 + i].t = txs[j].t;         // The + i here acts as a bootleg stride to make sure objects do not write over each other's entries.
+            xs[j * 2 + i].object = txs[j].object;
+        }
+        // xs[i * 2].t = txs[0].t;
+        // xs[i * 2 + 1].t = txs[1].t;
+        // xs[i * 2].object = txs[0].object;
+        // xs[i * 2 + 1].object = txs[1].object;
     }
     // TODO : move to function. 
     //THIS WHOLE FUCKING ERROR WAS CAUSED BY MY DUMBASS FORGETTING TO SORT THE OBJECT OF THE STRUCT WITH THE T VALUE!
