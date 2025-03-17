@@ -5,7 +5,7 @@
 #define COLOR_BLACK tuple_createColor(0, 0, 0)
 #define COLOR_WHITE tuple_createColor(1, 1, 1)
 
-enum patternType{Stripe};
+enum patternType{testPattern, Stripe, Gradient, Ring, Checker};
 
 typedef struct {
     Tuple a;
