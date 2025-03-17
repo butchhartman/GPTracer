@@ -50,7 +50,7 @@ Canvas camera_render(Camera cam, World world){
     for (int y = 0; y < image.height; y++) {
         for (int x = 0; x < image.width; x++) {
             Ray ray = camera_rayForPixel(cam, x, y);
-            Tuple color = world_worldColorAt(world, ray);
+            Tuple color = world_worldColorAt(world, ray, 4);
             canvas_writePixel(&image, color, x, y);
         }
     }

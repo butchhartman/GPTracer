@@ -108,7 +108,7 @@ void test_DefaultShapeAssignTransform() {
 }
 
 void test_DefaultShapeMaterial() {
-    Material testmat = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f);
+    Material testmat = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
 
     Shape s = shape_createDefaultShape(0, Sphere);
 
@@ -121,7 +121,7 @@ void test_DefaultShapeMaterial() {
 
 void test_DefaultShapeAssignMaterial() {
 
-    Material testmat = material_createMaterial(tuple_createColor(1, 1, 1), 1, 1, 1, 1);
+    Material testmat = material_createMaterial(tuple_createColor(1, 1, 1), 1, 1, 1, 1, 0.0f);
 
     Shape s = shape_createDefaultShape(0, Sphere);
     s = shape_assignMaterial(s, testmat);

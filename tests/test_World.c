@@ -48,7 +48,7 @@ void test_shadeHit() {
 
     Computations comps = intersection_prepareComputations(i, r);
 
-    Tuple c = world_shadeHit(w, comps);
+    Tuple c = world_shadeHit(w, comps, 1);
     
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, tuple_createColor(0.38066f, 0.47583f, 0.2855f)));
 }
@@ -61,7 +61,7 @@ void test_shadeHit_inside() {
     Intersection i = intersection_intersectionCreateIntersection(shape, 0.5f);
     Computations comps = intersection_prepareComputations(i, r);
 
-    Tuple c = world_shadeHit(w, comps);
+    Tuple c = world_shadeHit(w, comps, 1);
     
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, tuple_createColor(0.90498f, 0.90498f, 0.90498f)));
 }
@@ -69,7 +69,7 @@ void test_shadeHit_inside() {
 void test_colorAt() {
     World w = world_createDefault();
     Ray r = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 1, 0));
-    Tuple c = world_worldColorAt(w, r);
+    Tuple c = world_worldColorAt(w, r, 1);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, tuple_createColor(0, 0, 0)));
 
@@ -78,7 +78,7 @@ void test_colorAt() {
 void test_colorAt_hit() {
     World w = world_createDefault();
     Ray r = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
-    Tuple c = world_worldColorAt(w, r);
+    Tuple c = world_worldColorAt(w, r, 1);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, tuple_createColor(0.38066f, 0.47583f, 0.2855f)));
 
@@ -90,7 +90,7 @@ void test_colorAt_inside() {
     w.objects[0].material.ambient = 1;
     w.objects[1].material.ambient = 1;
 
-    Tuple c = world_worldColorAt(w, r);
+    Tuple c = world_worldColorAt(w, r, 1);
     Tuple realColor = tuple_createColor(w.objects[1].material.surfaceColor.x,  w.objects[1].material.surfaceColor.y,  w.objects[1].material.surfaceColor.z);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(c, realColor));
@@ -138,7 +138,7 @@ void test_inShadow_5() {
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 5), tuple_createVector(0, 0, 1));
     Intersection i = intersection_intersectionCreateIntersection(w.objects[1], 4.0f);
     Computations comps = intersection_prepareComputations(i, ray);
-    Tuple c = world_shadeHit(w, comps);
+    Tuple c = world_shadeHit(w, comps, 1);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createColor(0.1f, 0.1f, 0.1f), c));
 }
@@ -147,7 +147,7 @@ void test_inShadow_offset() {
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
     Mat4 strans;
     mat_mat4CreateTranslation(strans,0, 0, 1);
-    Material mat = material_createMaterial(tuple_createColor(1,1,1), 1, 1, 1, 1);
+    Material mat = material_createMaterial(tuple_createColor(1,1,1), 1, 1, 1, 1, 0.0f);
     Shape sphere = shape_createDefaultShape(0, Sphere);
     sphere.material = mat;
     mat_mat4Copy(strans, sphere.transform); 

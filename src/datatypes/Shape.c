@@ -2,7 +2,7 @@
 
 
 Shape shape_createDefaultShape(unsigned int instanceID, enum Formfactor formfactor) {
-    Material defaultMat = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f);
+    Material defaultMat = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Mat4 defaultTransform = MAT4_IDENTITY;
 
     Shape defaultShape;

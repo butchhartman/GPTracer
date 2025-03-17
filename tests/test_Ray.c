@@ -30,7 +30,7 @@ void test_rayPosition() {
 }
 
 void test_rayShapeIntersection() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0), 0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
@@ -48,7 +48,7 @@ void test_rayShapeIntersection() {
 }
 
 void test_rayShapeIntersection_tangent() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 1, -5), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
@@ -65,7 +65,7 @@ void test_rayShapeIntersection_tangent() {
 }
 
 void test_rayShapeIntersection_Miss(){
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 2, -5), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
@@ -82,7 +82,7 @@ void test_rayShapeIntersection_Miss(){
 }
 
 void test_rayShapeIntersect_insideSphere() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
@@ -99,7 +99,7 @@ void test_rayShapeIntersect_insideSphere() {
 } 
 
 void test_rayShapeIntersect_behind() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 5), tuple_createVector(0, 0, 1));
     Shape sphere = shape_createDefaultShape(0, Sphere); 
     sphere.material = mat;
@@ -136,7 +136,7 @@ void test_rayScale() {
 }
 
 void test_rayScaledShape() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
     Shape s = shape_createDefaultShape(0, Sphere); 
     Mat4 scale;
@@ -154,7 +154,7 @@ void test_rayScaledShape() {
 }
 
 void test_rayTranslatedShape() {
-    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f);
+    Material mat = material_createMaterial(tuple_createColor(1, 0, 0),0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Ray ray = ray_createRay(tuple_createPoint(0, 0, -5), tuple_createVector(0, 0, 1));
     Shape s = shape_createDefaultShape(0, Sphere); 
     Mat4 translation;

@@ -7,8 +7,8 @@ World world_createDefault(){
     
     newWorld.objects = malloc(newWorld.objectCount * sizeof(Shape));
 
-    Material sphereMat = material_createMaterial(tuple_createColor(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f, 200.0f);
-    Material sphereMat2 = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f);
+    Material sphereMat = material_createMaterial(tuple_createColor(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f, 200.0f, 0.0f);
+    Material sphereMat2 = material_createMaterial(tuple_createColor(1, 1, 1), 0.1f, 0.9f, 0.9f, 200.0f, 0.0f);
     Mat4 s2Transform;
     mat_mat4CreateScaling(s2Transform, 0.5, 0.5, 0.5);
 
@@ -69,12 +69,16 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
     return xs;
 }
 
-Tuple world_shadeHit(World world, Computations comps){
+Tuple world_shadeHit(World world, Computations comps, int remaining){
     int inShadow = world_pointInShadow(world, comps.overPoint);
-    return material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow, comps.object); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
+    Tuple lightingColor = material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow, comps.object); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
+    Tuple reflectedColor = world_reflectedColor(world, comps, remaining);
+    Tuple combinedColor = tuple_tupleAdd(lightingColor, reflectedColor);
+    combinedColor.w = 1; // hack to avoid w inconsistencies when adding colors 
+    return combinedColor; 
 }
 
-Tuple world_worldColorAt(World world, Ray ray){
+Tuple world_worldColorAt(World world, Ray ray, int remaining){
     int length;
     Intersection *xs = world_intersectWorld(world, ray, &length);
     Intersection hit = intersection_determineHit(xs, length);
@@ -83,7 +87,7 @@ Tuple world_worldColorAt(World world, Ray ray){
     }
     Computations comps = intersection_prepareComputations(hit, ray);
     free(xs);
-    return world_shadeHit(world, comps);
+    return world_shadeHit(world, comps, remaining);
 }
 
 int world_pointInShadow(World world, Tuple point){
@@ -104,4 +108,20 @@ int world_pointInShadow(World world, Tuple point){
     else {
         return 0;
     }
+}
+
+Tuple world_reflectedColor(World w, Computations comps, int remaining){
+    if (comps.object.material.reflective == 0) {
+        return COLOR_BLACK;
+    }
+
+    if (remaining <= 0) {
+        return COLOR_BLACK;
+    }
+
+    Ray reflectRay = ray_createRay(comps.overPoint, comps.reflectv);
+    Tuple color = world_worldColorAt(w, reflectRay, remaining - 1);
+    Tuple reflectedColor = tuple_tupleMuls(color, comps.object.material.reflective);
+    reflectedColor.w = 1; // hack to keep things consistent with colors
+    return reflectedColor;
 }
