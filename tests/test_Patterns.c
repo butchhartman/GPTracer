@@ -175,7 +175,7 @@ void test_patternCheckers_z() {
     Pattern p = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Checker);
     TEST_ASSERT_TRUE(tuple_tupleCompare(pattern_patternAt(p, tuple_createPoint(0,0,0)), COLOR_WHITE));
     TEST_ASSERT_TRUE(tuple_tupleCompare(pattern_patternAt(p, tuple_createPoint(0,0,0.99f)), COLOR_WHITE));
-    TEST_ASSERT_TRUE(tuple_tupleCompare(pattern_patternAt(p, tuple_createPoint(0,0,0.99f)), COLOR_BLACK));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(pattern_patternAt(p, tuple_createPoint(0,0,1.01f)), COLOR_BLACK));
 }
 
 int main() {
@@ -194,7 +194,7 @@ int main() {
     RUN_TEST(test_patternGradient);
     RUN_TEST(test_patternRing);
     RUN_TEST(test_patternCheckers_x);
-    RUN_TEST(test_patternAt_y);
-    RUN_TEST(test_patternAt_z);
+    RUN_TEST(test_patternCheckers_y);
+    RUN_TEST(test_patternCheckers_z);
     return UNITY_END();
 }

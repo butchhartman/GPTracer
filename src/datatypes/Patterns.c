@@ -48,8 +48,8 @@ Tuple pattern_patternAt(Pattern pattern, Tuple point){
             }
             break;
 
-        case (Checker):
-            if ( (int)(fabsf(point.x) + fabsf(point.y) + fabsf(point.z)) % 2 == 0) {
+        case (Checker):             // I add 0.01f here because surface acne will result otherwise
+            if ( (int)(floorf(point.x+.01f) + floorf(point.y+.01f) + floorf(point.z+.01f) ) % 2 == 0) { // using fabsf instead of floor here produces a different pattern which is interesting by itself 
                 return pattern.a;
             }
             else {

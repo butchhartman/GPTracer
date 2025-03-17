@@ -63,18 +63,26 @@ int main(int argc, char* argv[]) {
 	mat_mat4MultiplyMat4(sphere.transform, sRy, sphere.transform);
 
 	Mat4 patScale;
-	mat_mat4CreateScaling(patScale, 0.1, 0.1, 0.1);
+	mat_mat4CreateScaling(patScale, 0.5, 0.5, 0.5);
 
 	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f);
-	floorMat.pattern = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Stripe);
-	mat_mat4Copy(patScale, floorMat.pattern.transform);
+	floorMat.pattern = pattern_createPattern(tuple_createColor(1, 0.6f, 0.6f), tuple_createColor(1, 0.97f, 0.97f), Ring);
+	//mat_mat4Copy(patScale, floorMat.pattern.transform);
 	plane.material = floorMat;
 
+	
 	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f);
-	material.pattern = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Stripe);
+	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0.5f), tuple_createColor(1, 0, 0), Checker);
+	mat_mat4Copy(patScale, material.pattern.transform);
 	sphere.material = material;
+	material.pattern = pattern_createPattern(tuple_createColor(1, .2f, 0.7f), tuple_createColor(0, 1, 0), Gradient);
+	mat_mat4Copy(patScale, material.pattern.transform);
 	sphere2.material = material;
+	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0.5f), tuple_createColor(1, 0, 0.7f), Ring);
+	mat_mat4Copy(patScale, material.pattern.transform);
 	sphere3.material = material;
+	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0), tuple_createColor(1, .5f, 1), Stripe);
+	mat_mat4Copy(patScale, material.pattern.transform);
 	sphere4.material = material;
 
 	Mat4 rx;
