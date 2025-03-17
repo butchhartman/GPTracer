@@ -100,7 +100,7 @@ char** canvas_canvasToPPM(Canvas canvas, int *dataLength)
 	//strcat(PPMdata[3], "\0");
 
 	*dataLength = 4;
-
+	free(canvas.pixels);
 	return PPMdata;
 
 	/*

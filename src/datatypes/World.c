@@ -65,6 +65,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
     //     printf("ARR %d : %f\n", i, xs[i].t);
     // }
     *length = 2 * world.objectCount;
+    free(txs);
     return xs;
 }
 
@@ -81,6 +82,7 @@ Tuple world_worldColorAt(World world, Ray ray){
         return tuple_createColor(0, 0, 0);
     }
     Computations comps = intersection_prepareComputations(hit, ray);
+    free(xs);
     return world_shadeHit(world, comps);
 }
 
@@ -95,6 +97,7 @@ int world_pointInShadow(World world, Tuple point){
     Intersection *xs = world_intersectWorld(world, ray, &noXs);
 
     Intersection hit = intersection_determineHit(xs, noXs);
+    free(xs);
     if (!isnan(hit.t) && hit.t < distance) {
         return 1;
     }

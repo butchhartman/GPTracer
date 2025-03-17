@@ -17,4 +17,6 @@ void ppm_writePPM(char** PPMdata) {
 
 
 	fclose(fptr);
+
+	free(PPMdata);
 }

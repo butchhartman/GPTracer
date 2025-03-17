@@ -108,6 +108,9 @@ int main(int argc, char* argv[]) {
 	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 
 	Canvas canvas =	camera_render(camera, w);
+
+	free(w.objects);
+
 	double endMathTime = (double)(clock() - mathTime) / CLOCKS_PER_SEC;
 	printf("Program took %f seconds to compute rendering calculations", endMathTime);
 	printf("Writing to file...\n");
