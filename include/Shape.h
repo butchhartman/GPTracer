@@ -19,7 +19,7 @@ Shape shape_assignMaterial(Shape shape, Material mat);
 Tuple shape_normalAt(Shape shape, Tuple point);
 Tuple shape_sphereNormalAt(Shape sphere, Tuple point);
 
-Tuple pattern_stripeAtObject(Pattern pattern, Shape object, Tuple worldPoint);
+Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint);
 
 
 Tuple material_calculateLighting(Material material, Pointlight light, Tuple point, Tuple eyev, Tuple normalv, int inShadow, Shape object);

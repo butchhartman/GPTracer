@@ -66,12 +66,12 @@ int main(int argc, char* argv[]) {
 	mat_mat4CreateScaling(patScale, 0.1, 0.1, 0.1);
 
 	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f);
-	floorMat.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
+	floorMat.pattern = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Stripe);
 	mat_mat4Copy(patScale, floorMat.pattern.transform);
 	plane.material = floorMat;
 
 	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f);
-	material.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
+	material.pattern = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Stripe);
 	sphere.material = material;
 	sphere2.material = material;
 	sphere3.material = material;

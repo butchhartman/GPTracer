@@ -53,7 +53,7 @@ Tuple shape_sphereNormalAt(Shape sphere, Tuple point){
    return tuple_createVector(point.x, point.y, point.z);// Supposed to be point - origin position, but origin is always 0, 0, 0, so simplified
 }
 // kind of disgusting that I put this here but ̅ \_(ツ)_/ ̅  
-Tuple pattern_stripeAtObject(Pattern pattern, Shape object, Tuple worldPoint){
+Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint){
     Mat4 invObjTrans;
     Mat4 invPatTrans;
     mat_mat4Inverse(object.transform, invObjTrans);
@@ -62,7 +62,7 @@ Tuple pattern_stripeAtObject(Pattern pattern, Shape object, Tuple worldPoint){
     Tuple obejectPoint = mat_mat4MultuplyTuple(invObjTrans, worldPoint);
     Tuple patternPoint = mat_mat4MultuplyTuple(invPatTrans, obejectPoint);
 
-    return pattern_stripeAt(pattern, patternPoint);
+    return pattern_patternAt(pattern, patternPoint);
 }
 
 // again, hate that this is here
@@ -70,7 +70,7 @@ Tuple material_calculateLighting(Material material, Pointlight light, Tuple poin
     Tuple originalColor;
     
     if (material.pattern.a.x != -1 && material.pattern.b.x != -1) { // if a pattern is set, negative RGV values are invalid and used to represent not a color
-        originalColor = pattern_stripeAtObject(material.pattern, object,  point);
+        originalColor = pattern_patternAtObject(material.pattern, object,  point);
     } 
     else  {
         originalColor = material.surfaceColor;

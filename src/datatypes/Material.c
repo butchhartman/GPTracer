@@ -8,7 +8,7 @@ Material material_createMaterial(Tuple surfaceColor, float ambient, float diffus
     newm.diffuse = diffuse;
     newm.specular = specular;
     newm.shininess = shininess;
-    newm.pattern = pattern_stripe(tuple_createColor(-1, -1, -1), tuple_createColor(-1, -1, -1));
+    newm.pattern = pattern_createPattern(tuple_createColor(-1, -1, -1), tuple_createColor(-1, -1, -1), Stripe);
     return newm;    
 }
 

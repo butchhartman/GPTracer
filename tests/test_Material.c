@@ -99,7 +99,7 @@ void test_materialLighting_shadow() {
 
 void test_materialLighting_pattern() {
     Material mat;
-    mat.pattern = pattern_stripe(COLOR_WHITE, COLOR_BLACK);
+    mat.pattern = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Stripe);
     mat.ambient = 1;
     mat.diffuse = 0;
     mat.specular = 0;
