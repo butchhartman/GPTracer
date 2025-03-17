@@ -6,6 +6,8 @@
 #include "Material.h"
 #include "Ray.h"
 #include "Intersection.h"
+
+
 typedef struct {
     Pointlight light;
     Shape *objects;

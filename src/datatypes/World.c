@@ -35,6 +35,7 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
             xs[j * 2 + i].t = txs[j].t;         // The + i here acts as a bootleg stride to make sure objects do not write over each other's entries.
             xs[j * 2 + i].object = txs[j].object;
         }
+        free(txs);
         // xs[i * 2].t = txs[0].t;
         // xs[i * 2 + 1].t = txs[1].t;
         // xs[i * 2].object = txs[0].object;
@@ -65,7 +66,6 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
     //     printf("ARR %d : %f\n", i, xs[i].t);
     // }
     *length = 2 * world.objectCount;
-    free(txs);
     return xs;
 }
 

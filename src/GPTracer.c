@@ -120,7 +120,6 @@ int main(int argc, char* argv[]) {
 	double elapsedTime = (double)(clock() - start_time) / CLOCKS_PER_SEC;
 	printf("Program took %f seconds to write to PPM", elapsedTime);
 
-
 	// for (int i = 0; i < 12; i++) {
 	// 	Mat4 rotationMatrix = {0};
 	// 	Mat4 translationMatrix = {0};

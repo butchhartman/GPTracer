@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <stdio.h>
 #include <math.h>
+
 /* 
 * Helper function
 * Compares two float numbers for equality.

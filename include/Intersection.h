@@ -1,6 +1,7 @@
 #pragma once
 #include "Shape.h"
 
+
 typedef struct {
     Shape object;
     float t;
