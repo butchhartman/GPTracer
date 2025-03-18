@@ -125,7 +125,7 @@ void test_preComputeReflectionVector() {
     Shape plane = shape_createDefaultShape(0, Plane);
     Ray r = ray_createRay(tuple_createPoint(0, 1, -1), tuple_createVector(0, -sqrtf(2.0f)/2.0f, sqrtf(2.0f)/2.0f));
     Intersection i = intersection_intersectionCreateIntersection(plane, sqrtf(2.0f));
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
     TEST_ASSERT_TRUE(tuple_tupleCompare(comps.reflectv, tuple_createVector(0, sqrtf(2.0f)/2.0f, sqrtf(2.0f)/2.0f)));
 }
 
@@ -134,7 +134,7 @@ void test_strikeNonreflective() {
     Ray r = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
     w.objects[0].material.ambient = 1;
     Intersection i = intersection_intersectionCreateIntersection(w.objects[0], 1);
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1 );
     Tuple color = world_reflectedColor(w, comps, 1);
     TEST_ASSERT_TRUE(tuple_tupleCompare(color, COLOR_BLACK));
 }
@@ -152,7 +152,7 @@ void test_strikeReflectiveSurface() {
 
     Ray r = ray_createRay(tuple_createPoint(0, 0, -3), tuple_createVector(0, -sqrtf(2.0f)/2.0f, sqrtf(2.0f)/2.0f));
     Intersection i = intersection_intersectionCreateIntersection(w.objects[2], sqrtf(2.0f));
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
     Tuple color = world_reflectedColor(w, comps, 1);
     
     TEST_ASSERT_TRUE(tuple_tupleCompare(color, tuple_createColor(0.1920f, 0.2400f, 0.14404f)));
@@ -172,7 +172,7 @@ void test_shadeHitReflective(){
 
     Ray r = ray_createRay(tuple_createPoint(0, 0, -3), tuple_createVector(0, -sqrtf(2.0f)/2.0f, sqrtf(2.0f)/2.0f));
     Intersection i = intersection_intersectionCreateIntersection(w.objects[2], sqrtf(2.0f));
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
     Tuple color = world_shadeHit(w, comps, 1);
     
     TEST_ASSERT_TRUE(tuple_tupleCompare(color, tuple_createColor(0.87848f, 0.92649f, 0.83048f)));
@@ -227,6 +227,87 @@ void test_recursiveReflectionReturnsAtLimit() {
 
 }
 
+void test_materialDefaultRefractive() {
+    Material mat = material_createMaterial(COLOR_WHITE, 0, 0, 0, 0, 0);
+    TEST_ASSERT_EQUAL_FLOAT(0.0f, mat.transparency);
+    TEST_ASSERT_EQUAL_FLOAT(1.0f, mat.refractiveIndex);
+}
+
+void test_defaultGlassySphere() {
+    Shape gs = shape_glassySphere(0);
+    Mat4 expected = MAT4_IDENTITY;
+    TEST_ASSERT_TRUE(mat_mat4Compare(expected, gs.transform));
+    TEST_ASSERT_EQUAL_FLOAT(1.0f, gs.material.transparency);
+    TEST_ASSERT_EQUAL_FLOAT(1.5f, gs.material.refractiveIndex);
+}
+
+void test_determineN1N2() {
+    Mat4 sphereATransform;
+    mat_mat4CreateScaling(sphereATransform, 2, 2, 2);
+    Shape sphereA = shape_glassySphere(0);
+    mat_mat4Copy(sphereATransform, sphereA.transform);
+    sphereA.material.refractiveIndex = 1.5f;
+
+    Mat4 sphereBTransform;
+    mat_mat4CreateTranslation(sphereBTransform, 0, 0, -0.25); 
+    Shape sphereB = shape_glassySphere(1);
+    mat_mat4Copy(sphereBTransform, sphereB.transform);
+    sphereB.material.refractiveIndex = 2.0f;
+
+    Mat4 sphereCTransform;
+    mat_mat4CreateTranslation(sphereCTransform, 0, 0, 0.25); 
+    Shape sphereC = shape_glassySphere(2);
+    mat_mat4Copy(sphereCTransform, sphereC.transform);
+    sphereC.material.refractiveIndex = 2.5f;
+
+    Ray r = ray_createRay(tuple_createPoint(0, 0, -4), tuple_createVector(0, 0, 1));
+
+    Intersection xs[6];
+    xs[0] = intersection_intersectionCreateIntersection(sphereA, 2.0f);
+    xs[1] = intersection_intersectionCreateIntersection(sphereB, 2.75f);
+    xs[2] = intersection_intersectionCreateIntersection(sphereC, 3.25f);
+    xs[3] = intersection_intersectionCreateIntersection(sphereB, 4.75f);
+    xs[4] = intersection_intersectionCreateIntersection(sphereC, 5.25f);
+    xs[5] = intersection_intersectionCreateIntersection(sphereA, 6);
+
+    for (int i = 0; i < 6; i++) {
+        Computations comps = intersection_prepareComputations(xs[i], r, xs, 6);
+
+        switch (i)
+        {
+        case 0:
+            TEST_ASSERT_EQUAL_FLOAT(1.0f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(1.5f, comps.n2);
+            break;
+        
+        case 1:
+            TEST_ASSERT_EQUAL_FLOAT(1.5f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(2.0f, comps.n2);
+            break;
+
+        case 2:
+            TEST_ASSERT_EQUAL_FLOAT(2.0f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(2.5f, comps.n2);
+            break;
+        case 3:
+            TEST_ASSERT_EQUAL_FLOAT(2.5f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(2.5f, comps.n2);
+            break;
+        case 4:
+            TEST_ASSERT_EQUAL_FLOAT(2.5f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(1.5f, comps.n2);
+            break;
+        case 5:
+            TEST_ASSERT_EQUAL_FLOAT(1.5f, comps.n1);
+            TEST_ASSERT_EQUAL_FLOAT(1.0f, comps.n2);
+            break;
+        default:
+            break;
+        }
+
+    }
+}
+
 int main() {
     RUN_TEST(test_createMaterial);
     RUN_TEST(test_materialLighting_angle0);
@@ -243,5 +324,10 @@ int main() {
     RUN_TEST(test_shadeHitReflective);
     RUN_TEST(test_avoidInfiniteRecursion);
     RUN_TEST(test_recursiveReflectionReturnsAtLimit);
+    RUN_TEST(test_materialDefaultRefractive);
+    RUN_TEST(test_defaultGlassySphere);
+    RUN_TEST(test_materialDefaultRefractive);
+    RUN_TEST(test_defaultGlassySphere);
+    RUN_TEST(test_determineN1N2);
     return UNITY_END();
 }

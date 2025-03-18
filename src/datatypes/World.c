@@ -85,7 +85,7 @@ Tuple world_worldColorAt(World world, Ray ray, int remaining){
     if (isnan(hit.t)) {
         return tuple_createColor(0, 0, 0);
     }
-    Computations comps = intersection_prepareComputations(hit, ray);
+    Computations comps = intersection_prepareComputations(hit, ray, xs, length);
     free(xs);
     return world_shadeHit(world, comps, remaining);
 }

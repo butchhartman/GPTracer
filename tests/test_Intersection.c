@@ -115,7 +115,7 @@ void test_prepareComputations() {
     s.material = mat;
 
     Intersection i = intersection_intersectionCreateIntersection(s, 4);
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
 
     TEST_ASSERT_TRUE(comps.object.instanceID == i.object.instanceID);
     TEST_ASSERT_TRUE(floatCompare(comps.t, i.t));
@@ -130,7 +130,7 @@ void test_prepareComputations_inside() {
     Shape shape = shape_createDefaultShape(0, Sphere);
     shape.material = mat;
     Intersection i = intersection_intersectionCreateIntersection(shape, 4);
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
 
     TEST_ASSERT_FALSE(comps.inside);
 }
@@ -142,7 +142,7 @@ void test_prepareComputations_insidetrue() {
     shape.material = mat;
 
     Intersection i = intersection_intersectionCreateIntersection(shape, 1);
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
 
     TEST_ASSERT_TRUE(comps.object.instanceID == i.object.instanceID);
     TEST_ASSERT_TRUE(floatCompare(comps.t, i.t));

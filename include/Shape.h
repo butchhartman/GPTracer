@@ -14,6 +14,7 @@ typedef struct {
 } Shape;
 
 Shape shape_createDefaultShape(unsigned int instanceID, enum Formfactor formfactor);
+Shape shape_glassySphere(unsigned int instanceID);
 Shape shape_assignMaterial(Shape shape, Material mat);
 
 Tuple shape_normalAt(Shape shape, Tuple point);

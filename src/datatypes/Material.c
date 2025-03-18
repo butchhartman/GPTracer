@@ -10,6 +10,8 @@ Material material_createMaterial(Tuple surfaceColor, float ambient, float diffus
     newm.shininess = shininess;
     newm.pattern = pattern_createPattern(tuple_createColor(-1, -1, -1), tuple_createColor(-1, -1, -1), Stripe);
     newm.reflective = reflective;
+    newm.transparency = 0.0f;
+    newm.refractiveIndex = 1.0f;
     return newm;    
 }
 

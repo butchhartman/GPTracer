@@ -15,6 +15,13 @@ Shape shape_createDefaultShape(unsigned int instanceID, enum Formfactor formfact
     return defaultShape;
 }
 
+Shape shape_glassySphere(unsigned int instanceID){
+    Shape glassySphere = shape_createDefaultShape(instanceID, Sphere);
+    glassySphere.material.transparency = 1.0f;
+    glassySphere.material.refractiveIndex = 1.5f;
+    return glassySphere;
+}
+
 Shape shape_assignMaterial(Shape shape, Material mat) {
     Shape newShape = shape;
     newShape.material = mat;

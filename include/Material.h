@@ -11,6 +11,8 @@ typedef struct {
     float specular;
     float shininess;
     float reflective;
+    float transparency;
+    float refractiveIndex;
 } Material;
 
 Material material_createMaterial(Tuple surfaceColor, float ambient, float diffuse, float specular, float shininess, float reflective);

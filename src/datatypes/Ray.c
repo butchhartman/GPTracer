@@ -1,5 +1,7 @@
 #include "Ray.h"
 #include "malloc.h"
+#include "stdio.h"
+#include "string.h"
 Ray ray_createRay(Tuple origin, Tuple direction){
     Ray newRay;
     newRay.origin = origin;
@@ -91,9 +93,53 @@ Ray ray_transformRay(Ray ray, Mat4 transform){
     return transformedRay;
 }
 
-Computations intersection_prepareComputations(Intersection intersection, Ray ray){
+Computations intersection_prepareComputations(Intersection intersection, Ray ray, Intersection *xs, int length){
     Computations comps;
+    Intersection *containers;
+    if (xs != NULL) {
+        containers = malloc(length * sizeof(Intersection));
+    
+    int highestOccupiedIndex = -1;
+    for (int i = 0; i < length; i++) {
+        if (xs[i].t == intersection_determineHit(xs, length).t) { // this may cause problems if multiple intersections can have the same T value
+            if (highestOccupiedIndex == -1) {
+                comps.n1 = 1.0f;
+            }
+            else {
+                comps.n1 = containers[highestOccupiedIndex].object.material.refractiveIndex;
+            }
+        }
 
+        // detecting if xs[i] is already in containers
+        int iInContainer = 0;
+        for (int j = 0; j < highestOccupiedIndex; j++) {
+            if (containers[j].object.instanceID == xs[i].object.instanceID) {
+                iInContainer = 1;
+            }
+        }
+
+        if (iInContainer == 1) {
+            //memset(containers + highestOccupiedIndex, 0, sizeof(Intersection)); // should 'remove' an intersection by setting its memory to zero
+            
+            highestOccupiedIndex--;
+        } 
+        else {
+            highestOccupiedIndex++;
+            containers[highestOccupiedIndex] = xs[i]; // Should 'append' an intersection by increasing the highest occupied index and putting it there. 
+        }
+
+        if (xs[i].t == intersection_determineHit(xs, length).t) {
+            if (highestOccupiedIndex == -1) {
+                comps.n2 = 1.0f;
+            }
+        }
+        else {
+            comps.n2 = containers[highestOccupiedIndex].object.material.refractiveIndex;
+        }
+
+    }
+    free(containers);
+    }
     comps.t = intersection.t;
     comps.object = intersection.object;
 

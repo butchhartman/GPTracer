@@ -46,7 +46,7 @@ void test_shadeHit() {
     Shape shape = w.objects[0];
     Intersection i = intersection_intersectionCreateIntersection(shape, 4);
 
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
 
     Tuple c = world_shadeHit(w, comps, 1);
     
@@ -59,7 +59,7 @@ void test_shadeHit_inside() {
     Ray r = ray_createRay(tuple_createPoint(0, 0, 0), tuple_createVector(0, 0, 1));
     Shape shape = w.objects[1];
     Intersection i = intersection_intersectionCreateIntersection(shape, 0.5f);
-    Computations comps = intersection_prepareComputations(i, r);
+    Computations comps = intersection_prepareComputations(i, r, NULL, -1);
 
     Tuple c = world_shadeHit(w, comps, 1);
     
@@ -137,7 +137,7 @@ void test_inShadow_5() {
 
     Ray ray = ray_createRay(tuple_createPoint(0, 0, 5), tuple_createVector(0, 0, 1));
     Intersection i = intersection_intersectionCreateIntersection(w.objects[1], 4.0f);
-    Computations comps = intersection_prepareComputations(i, ray);
+    Computations comps = intersection_prepareComputations(i, ray, NULL, -1);
     Tuple c = world_shadeHit(w, comps, 1);
 
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createColor(0.1f, 0.1f, 0.1f), c));
@@ -153,7 +153,7 @@ void test_inShadow_offset() {
     mat_mat4Copy(strans, sphere.transform); 
     
     Intersection i = intersection_intersectionCreateIntersection(sphere, 5);
-    Computations comps = intersection_prepareComputations(i, ray);
+    Computations comps = intersection_prepareComputations(i, ray, NULL, -1);
     TEST_ASSERT_TRUE(comps.overPoint.z < -0.0001f/2.0f);
     TEST_ASSERT_TRUE(comps.point.z > comps.overPoint.z);
 }
