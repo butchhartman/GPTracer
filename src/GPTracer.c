@@ -17,7 +17,7 @@ void tick(Environment e, Projectile *p) {
 */
 int main(int argc, char* argv[]) {
 	int width, height = 0;
-
+	width = 100; height = 100;
 	if (argc > 1) {
 		for (int i = 0; i < argc; i++) {
 			if (strcmp(argv[i], "-h") == 0) {
@@ -38,72 +38,74 @@ int main(int argc, char* argv[]) {
 	clock_t mathTime = clock();
 	World w; 
 
-	Pointlight light = pointlight_createPointlight(tuple_createPoint(-10, 10, -10), tuple_createColor(1, 1, 1));
-	Shape plane = shape_createDefaultShape(0, Plane);
-	Shape sphere = shape_createDefaultShape(1, Sphere);
-	Shape sphere2 = shape_createDefaultShape(2, Sphere);
-	Shape sphere3 = shape_createDefaultShape(3, Sphere);
-	Shape sphere4 = shape_createDefaultShape(4, Sphere);
-
-	Mat4 sRy;
-	
-	Mat4 sTr;
-	mat_mat4CreateTranslation(sTr, 0, 1.5f, 3);
-	mat_mat4Copy(sTr, sphere.transform);
-	mat_mat4CreateTranslation(sTr, 3.2f, 1.2f, -2);
-	mat_mat4Copy(sTr, sphere2.transform);
-	mat_mat4CreateTranslation(sTr, -4.6f, 1.8f, 1.2f);
-	mat_mat4Copy(sTr, sphere3.transform);
-	mat_mat4CreateTranslation(sTr, -2.2f, 2.2f, -1.2f);
-	mat_mat4Copy(sTr, sphere4.transform);
-
-	// TODO : GENERALIZE PATTERNS
-
-	mat_mat4CreateRotation_y(sRy, rad(70));
-	mat_mat4MultiplyMat4(sphere.transform, sRy, sphere.transform);
-
-	Mat4 patScale;
-	mat_mat4CreateScaling(patScale, 0.5, 0.5, 0.5);
-
-	Material floorMat = material_createMaterial(tuple_createColor(1.0f, 0.95f, 0.95f), 0.1f, 0.9f, 0.1f, 200.0f, 0.8f);
-	floorMat.pattern = pattern_createPattern(tuple_createColor(1, 0.6f, 0.6f), tuple_createColor(1, 0.97f, 0.97f), Ring);
-	//mat_mat4Copy(patScale, floorMat.pattern.transform);
-	plane.material = floorMat;
-
-	
-	Material material = material_createMaterial(tuple_createColor(0, 1, 1), 0.1f, 0.9f, 0.9f, 150.0f, 0.0f);
-	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0.5f), tuple_createColor(1, 0, 0), Checker);
-	mat_mat4Copy(patScale, material.pattern.transform);
-	sphere.material = material;
-	material.pattern = pattern_createPattern(tuple_createColor(1, .2f, 0.7f), tuple_createColor(0, 1, 0), Gradient);
-	mat_mat4Copy(patScale, material.pattern.transform);
-	sphere2.material = material;
-	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0.5f), tuple_createColor(1, 0, 0.7f), Ring);
-	mat_mat4Copy(patScale, material.pattern.transform);
-	sphere3.material = material;
-	material.pattern = pattern_createPattern(tuple_createColor(0.5f, 1, 0), tuple_createColor(1, .5f, 1), Stripe);
-	mat_mat4Copy(patScale, material.pattern.transform);
-	sphere4.material = material;
-
-	Mat4 rx;
-	mat_mat4CreateRotation_x(rx, rad(90));
-	mat_mat4CreateTranslation(sTr, 0, 0, 7);
-	Shape wall = shape_createDefaultShape(5, Plane);
-	wall.material = floorMat;
-	mat_mat4MultiplyMat4(sTr, rx, wall.transform);
-	
+	Pointlight light = pointlight_createPointlight(tuple_createPoint(-4, 10, -10), tuple_createColor(1, 1, 1));
 	w.light = light;
-	w.objectCount = 6;
-	w.objects = malloc(sizeof(Shape) * w.objectCount);
-	w.objects[0] = plane;
-	w.objects[1] = sphere;
-	w.objects[2] = sphere2;
-	w.objects[3] = sphere3;
-	w.objects[4] = sphere4;
-	w.objects[5] = wall;
 
+	Shape plane = shape_createDefaultShape(0, Plane);
+	Shape plane1 = shape_createDefaultShape(1, Plane);
+	Shape plane2 = shape_createDefaultShape(2, Plane);
+	Shape plane3 = shape_createDefaultShape(7, Plane);
+	Shape sphere = shape_createDefaultShape(3, Sphere);
+	Shape sphere2 = shape_createDefaultShape(4, Sphere);
+	Shape sphere3 = shape_createDefaultShape(5, Sphere);
+	Shape sphere4 = shape_createDefaultShape(6, Sphere);
+
+	Pattern pat = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Checker);
+	plane.material.pattern = pat;
+	plane.material.reflective = 0.25f;
+	plane1.material.pattern = pat;
+	plane2.material.pattern = pat;
+	plane3.material.pattern = pat;
+
+	Mat4 wall1Rx;
+	Mat4 wall1Tz;
+	Mat4 wall1Transform;
+
+	mat_mat4CreateRotation_x(wall1Rx, rad(90));
+	mat_mat4CreateTranslation(wall1Tz, 0, 0, 5);
+	mat_mat4MultiplyMat4(wall1Tz,wall1Rx , wall1Transform);
+	mat_mat4Copy(wall1Transform, plane1.transform);
+
+
+	Mat4 wall2Rx;
+	Mat4 wall2Tz;
+	Mat4 wall2Transform;
+
+	mat_mat4CreateRotation_z(wall2Rx, rad(90));
+	mat_mat4CreateTranslation(wall2Tz, -5, 0, 0);
+	mat_mat4MultiplyMat4(wall2Tz,wall2Rx , wall2Transform);
+	mat_mat4Copy(wall2Transform, plane2.transform);
+
+
+	Mat4 ceilTransl;
+	mat_mat4CreateTranslation(ceilTransl, 0, 15, 0);
+	mat_mat4Copy(ceilTransl, plane3.transform);
+
+	Mat4 sphere1sc;
+	mat_mat4CreateScaling(sphere1sc, 0.25, 0.25, 0.25);
+	Mat4 sphere1tr;
+	mat_mat4CreateTranslation(sphere1tr, 0, 1, 0);
+	Mat4 sphere1Tr;
+	mat_mat4CreateTranslation(sphere1Tr, 0, 2, 0);
+
+	mat_mat4Copy(sphere1Tr, sphere.transform);
+	sphere.material.surfaceColor = tuple_createColor(1, 1, 1);
+	sphere.material.specular = 0;
+	sphere.material.shininess = 0;
+	sphere.material.diffuse = 0;
+	sphere.material.ambient = 0;
+	sphere.material.reflective = 1.0f;
+	// pure glass marbles need all their color removed
+
+	w.objectCount = 5;
+	w.objects = malloc(w.objectCount * sizeof(Shape));
+	w.objects[0] = plane1;
+	w.objects[1] = plane2;
+	w.objects[2] = plane;
+	w.objects[3] = plane3;
+	w.objects[4] = sphere;
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(5.7f, 6.3f, -5.76f), tuple_createPoint(0, 1.6f, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(5.7f, 4.3f, -5.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
 
 	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 
