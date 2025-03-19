@@ -31,6 +31,9 @@ Tuple ray_rayPosition(Ray ray, float t);
 Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection** dest, int *length);
 void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection** dest, int *length);
 void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *length);
+void ray_rayCubeIntersect(Ray ray, Shape cube, Intersection **dest, int *length);
+
+void ray_checkAxis(float origin, float direction, float *tmin, float *tmax);
 
 Ray ray_transformRay(Ray ray, Mat4 transform);
 

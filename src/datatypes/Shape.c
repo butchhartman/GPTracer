@@ -45,6 +45,8 @@ Tuple shape_normalAt(Shape shape, Tuple point){
             localNormal = tuple_createVector(0, 1, 0); // Planes are flat, with a constant normal vector throughout.   
             break; 
 
+        case (Cube):
+            localNormal = shape_cubeNormalAt(shape, localPoint);
         default:
             break;
     }
@@ -59,7 +61,27 @@ Tuple shape_normalAt(Shape shape, Tuple point){
 Tuple shape_sphereNormalAt(Shape sphere, Tuple point){
    return tuple_createVector(point.x, point.y, point.z);// Supposed to be point - origin position, but origin is always 0, 0, 0, so simplified
 }
-// kind of disgusting that I put this here but ̅ \_(ツ)_/ ̅  
+Tuple shape_cubeNormalAt(Shape cube, Tuple point){
+    float maxc = -1e30; // arbitrarily small number
+    if (fabsf(point.x) > maxc) {
+        maxc = fabsf(point.x);
+    }
+    if (fabsf(point.y) > maxc) {
+        maxc = fabsf(point.y);
+    }
+    if (fabsf(point.z) > maxc) {
+        maxc = fabsf(point.z);
+    }
+
+    if (maxc == fabsf(point.x)) {
+        return tuple_createVector(point.x, 0, 0);
+    }
+    else if (maxc == fabsf(point.y)) {
+        return tuple_createVector(0, point.y, 0);
+    }
+    return tuple_createVector(0, 0, point.z);
+}
+// kind of disgusting that I put this here but ̅ \_(ツ)_/ ̅
 Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint){
     Mat4 invObjTrans;
     Mat4 invPatTrans;

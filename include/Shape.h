@@ -3,7 +3,7 @@
 #include "Tuple.h"
 #include "Material.h"
 
-enum Formfactor {Sphere, Plane};
+enum Formfactor {Sphere, Plane, Cube};
 
 typedef struct {
     Tuple origin;
@@ -19,6 +19,7 @@ Shape shape_assignMaterial(Shape shape, Material mat);
 
 Tuple shape_normalAt(Shape shape, Tuple point);
 Tuple shape_sphereNormalAt(Shape sphere, Tuple point);
+Tuple shape_cubeNormalAt(Shape cube, Tuple point);
 
 Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint);
 

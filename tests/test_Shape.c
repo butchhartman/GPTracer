@@ -260,6 +260,206 @@ void test_planeRayBelow() {
     TEST_ASSERT_TRUE(xs[0].object .instanceID == p.instanceID);
 }
 
+void test_rayIntersectCube() {
+    Shape cube = shape_createDefaultShape(0, Cube);
+
+    Ray r;
+    int xsLength;
+    Intersection *xs;
+    for (int i = 0; i < 7; i++) {
+        switch (i)
+        {
+        case 0:
+           r = ray_createRay(tuple_createPoint(5, 0.5f, 0), tuple_createVector(-1, 0, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+       
+        case 1:
+            r = ray_createRay(tuple_createPoint(-5, 0.5f, 0), tuple_createVector(1, 0, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+        
+        case 2:
+            r = ray_createRay(tuple_createPoint(0.5f, 5, 0), tuple_createVector(0, -1, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+        
+        case 3:
+            r = ray_createRay(tuple_createPoint(0.5f, -5, 0), tuple_createVector(0, 1, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+
+        case 4:
+            r = ray_createRay(tuple_createPoint(0.5f, 0, 5), tuple_createVector(0, 0, -1));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+        
+        case 5:
+            r = ray_createRay(tuple_createPoint(0.5f, 0, -5), tuple_createVector(0, 0, 1));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(4, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(6, xs[1].t);
+            free(xs);
+            break;
+
+        case 6:
+            r = ray_createRay(tuple_createPoint(0, 0.5f, 0), tuple_createVector(0, 0, 1));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(-1, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(1, xs[1].t);
+            free(xs);
+            break;
+    
+        default:
+            break;
+        }
+    }
+
+}
+
+void test_rayCubeMiss() {
+    Shape cube = shape_createDefaultShape(0, Cube);
+    Ray r;
+    int xsLength;
+    Intersection *xs;
+
+for (int i = 0; i < 6; i++) {
+        switch (i)
+        {
+        case 0:
+           r = ray_createRay(tuple_createPoint(-2, 0, 0), tuple_createVector(0.2673f, 0.5345f, 0.8018f));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+       
+        case 1:
+            r = ray_createRay(tuple_createPoint(0, -2, 0), tuple_createVector(0.8018f, 0.2673f, 0.5345f));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+        
+        case 2:
+            r = ray_createRay(tuple_createPoint(0, 0, -2), tuple_createVector(0.5345f, 0.8018f, 0.2674f));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+        
+        case 3:
+            r = ray_createRay(tuple_createPoint(2, 0, 2), tuple_createVector(0, 0, -1));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+
+        case 4:
+            r = ray_createRay(tuple_createPoint(0, 2, 2), tuple_createVector(0, -1, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+        
+        case 5:
+            r = ray_createRay(tuple_createPoint(2, 2, 0), tuple_createVector(-1, 0, 0));
+            ray_rayCubeIntersect(r, cube, &xs, &xsLength);
+            TEST_ASSERT_EQUAL_INT(2, xsLength);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[0].t);
+            TEST_ASSERT_EQUAL_FLOAT(NAN, xs[1].t);
+            free(xs);
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+void test_cubeNormal() {
+    Shape cube = shape_createDefaultShape(0, Cube);
+    Tuple normal;
+    for (int i = 0; i < 7; i++) {
+
+        switch(i) {
+            case 0:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(1, 0.5f, -0.8f));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(1, 0, 0)));
+                break;
+
+            case 1:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(-1, 0.2f, 0.9f));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(-1, 0, 0)));
+                break;
+
+            case 2:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(-0.4f, 1, -0.1f));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(0, 1, 0)));
+                break;
+
+            case 3:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(0.3f, -1, -0.7f));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(0, -1, 0)));
+                break;
+
+            case 4:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(-0.6f, 0.3f, 1));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(0, 0, 1)));
+                break;
+
+            case 5:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(0.4f, 0.4f, -1));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(0, 0, -1)));
+                break;
+
+            case 6:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(1, 1, 1));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(1, 0, 0)));
+                break;
+
+            case 7:
+                normal = shape_cubeNormalAt(cube, tuple_createPoint(-1, -1, -1));
+                TEST_ASSERT_TRUE(tuple_tupleCompare(normal, tuple_createVector(-1, 0, 0)));
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 int main() {
     RUN_TEST(test_DefaultShapeMaterial);
     RUN_TEST(test_DefaultShapeAssignMaterial);
@@ -274,5 +474,8 @@ int main() {
     RUN_TEST(test_planeParallelRay);
     RUN_TEST(test_planeRayAbove);
     RUN_TEST(test_planeRayBelow);
+    RUN_TEST(test_rayIntersectCube);
+    RUN_TEST(test_rayCubeMiss);
+    RUN_TEST(test_cubeNormal);
     return UNITY_END();
 }

@@ -30,6 +30,10 @@ Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection **dest, int *length
             ray_rayPlaneIntersect(transformedRay, shape, dest, length);
             break;
 
+        case(Cube):
+            ray_rayCubeIntersect(transformedRay, shape, dest, length);
+            break;
+
         default:
             break;
 
@@ -80,6 +84,82 @@ void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *lengt
         (*dest)[0].t = NAN;
     } else {
         (*dest)[0].t = -ray.origin.y / ray.direction.y;
+    }
+
+}
+
+void ray_rayCubeIntersect(Ray ray, Shape cube, Intersection **dest, int *length){
+    float xtmin, xtmax;
+    float ytmin, ytmax;
+    float ztmin, ztmax;
+    ray_checkAxis(ray.origin.x, ray.direction.x, &xtmin, &xtmax);
+    ray_checkAxis(ray.origin.y, ray.direction.y, &ytmin, &ytmax);
+    ray_checkAxis(ray.origin.z, ray.direction.z, &ztmin, &ztmax);
+
+    float tmin = -1e30; // arbitrarily small number
+    float tmax = 1e30; // arbitrarily large number
+
+    if (xtmin > tmin) {
+        tmin = xtmin;
+    }
+    if (ytmin > tmin) {
+        tmin = ytmin;
+    }
+    if (ztmin > tmin) {
+        tmin = ztmin;
+    }
+
+    if (xtmax < tmax) {
+        tmax = xtmax;
+    }
+    if (ytmax < tmax) {
+        tmax = ytmax;
+    }
+    if (ztmax < tmax) {
+        tmax = ztmax;
+    }
+
+
+    *dest = malloc(sizeof(Intersection) * 2);
+    *length = 2;
+
+    if (tmin > tmax) {
+        (*dest)[0].object = cube;
+        (*dest)[0].t = NAN; 
+        (*dest)[1].object = cube;
+        (*dest)[1].t = NAN; 
+    }
+    else {
+        (*dest)[0].object = cube;
+        (*dest)[0].t = tmin; 
+        (*dest)[1].object = cube;
+        (*dest)[1].t = tmax; 
+    }   
+}
+
+void ray_checkAxis(float origin, float direction, float *tmin, float *tmax){
+    float tminNumerator = (-1 - origin);
+    float tmaxNumerator = (1 - origin);
+
+    float localtmin;
+    float localtmax;
+
+    if (fabsf(direction) >= 0.01) { // EPSILON, 0.01 instead of 0.0001 as is the theme for this program
+        localtmin = tminNumerator / direction;
+        localtmax = tmaxNumerator / direction;
+    }
+    else {
+        localtmin = tminNumerator * INFINITY;
+        localtmax = tmaxNumerator * INFINITY; 
+    }
+
+    if (localtmin > localtmax) {
+        *tmin = localtmax;
+        *tmax = localtmin;
+    }
+    else {
+        *tmin = localtmin;
+        *tmax = localtmax;
     }
 
 }

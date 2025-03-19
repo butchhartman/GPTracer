@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	Shape plane2 = shape_createDefaultShape(2, Plane);
 	Shape plane3 = shape_createDefaultShape(7, Plane);
 	Shape sphere = shape_createDefaultShape(3, Sphere);
-	Shape sphere2 = shape_createDefaultShape(4, Sphere);
+	Shape sphere2 = shape_createDefaultShape(4, Cube);
 	Shape sphere3 = shape_createDefaultShape(5, Sphere);
 	Shape sphere4 = shape_createDefaultShape(6, Sphere);
 
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
 	w.objects[4] = sphere;
 	w.objects[5] = sphere2;
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(-4.5f, 2.0f,  0.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(-4.5f, 2.0f,  -2.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
 
 	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 
