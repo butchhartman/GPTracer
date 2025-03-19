@@ -98,10 +98,10 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
     Intersection *containers;
     if (xs != NULL) {
         containers = malloc(length * sizeof(Intersection));
-    
+
     int highestOccupiedIndex = -1;
     for (int i = 0; i < length; i++) {
-        if (xs[i].t == intersection_determineHit(xs, length).t) { // this may cause problems if multiple intersections can have the same T value
+        if (xs[i].t == intersection.t) { // this may cause problems if multiple intersections can have the same T value
             if (highestOccupiedIndex == -1) {
                 comps.n1 = 1.0f;
             }
@@ -112,34 +112,46 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
 
         // detecting if xs[i] is already in containers
         int iInContainer = 0;
-        for (int j = 0; j < highestOccupiedIndex; j++) {
+        int containerAt = 0;
+        for (int j = 0; j <= highestOccupiedIndex; j++) {
             if (containers[j].object.instanceID == xs[i].object.instanceID) {
                 iInContainer = 1;
+                containerAt = j;
             }
         }
 
         if (iInContainer == 1) {
-            //memset(containers + highestOccupiedIndex, 0, sizeof(Intersection)); // should 'remove' an intersection by setting its memory to zero
+            // I need to detect when the thing i want to remove is not the thing at the current index
+            // I need to detect when the thing i want to remove is the thing at the current index
+            // I dont think its detecting that C is already in there
             
+
+            if (highestOccupiedIndex - 1 >= 0 && containerAt != highestOccupiedIndex) {
+                for (int l = containerAt; l <= highestOccupiedIndex; l++) // may be a source of errors, intent is to shift the array after the removed index to the left
+                containers[l] = containers[l+1];
+            }
             highestOccupiedIndex--;
+            
         } 
         else {
             highestOccupiedIndex++;
             containers[highestOccupiedIndex] = xs[i]; // Should 'append' an intersection by increasing the highest occupied index and putting it there. 
         }
 
-        if (xs[i].t == intersection_determineHit(xs, length).t) {
+        if (xs[i].t == intersection.t) {
             if (highestOccupiedIndex == -1) {
                 comps.n2 = 1.0f;
             }
-        }
-        else {
-            comps.n2 = containers[highestOccupiedIndex].object.material.refractiveIndex;
+            else {
+                comps.n2 = containers[highestOccupiedIndex].object.material.refractiveIndex;
+            }
+            break;
         }
 
     }
     free(containers);
     }
+
     comps.t = intersection.t;
     comps.object = intersection.object;
 
