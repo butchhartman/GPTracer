@@ -35,3 +35,5 @@ void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *lengt
 Ray ray_transformRay(Ray ray, Mat4 transform);
 
 Computations intersection_prepareComputations(Intersection intersection, Ray ray, Intersection *xs, int length);
+
+float ray_schlick(Computations comps);

@@ -172,3 +172,23 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
 
     return comps;
 }
+
+float ray_schlick(Computations comps){
+    float cos = tuple_vectorDot(comps.eyev, comps.normalv);
+
+    if (comps.n1 > comps.n2) {
+        float n = comps.n1 / comps.n2;
+        float sin2_t = powf(n, 2) * (1.0f - powf(cos, 2));
+
+        if (sin2_t > 1.0f) {
+            return 1.0f;
+        }
+
+        float cos_t = sqrtf(1.0f - sin2_t);
+        cos = cos_t;
+    }
+
+    float r0 = powf( (comps.n1 - comps.n2) / (comps.n1 + comps.n2), 2 );
+
+    return r0 + (1 - r0) * powf((1 - cos), 5);
+}

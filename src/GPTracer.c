@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	Mat4 sphere1sc;
 	mat_mat4CreateScaling(sphere1sc, 0.5, 0.5, 0.5);
 	Mat4 sphere1tr;
-	mat_mat4CreateTranslation(sphere1tr, 0, 2, 0.0f);
+	mat_mat4CreateTranslation(sphere1tr, -2, 2, 0.0f);
 	Mat4 sphere1Tr;
 	mat_mat4CreateTranslation(sphere1Tr, 0, 2, 0);
 
@@ -92,27 +92,20 @@ int main(int argc, char* argv[]) {
 
 
 	mat_mat4Copy(sphere1Tr, sphere.transform);
-	sphere.material.surfaceColor = tuple_createColor(1, 0, 0);
+	sphere.material.surfaceColor = tuple_createColor(0, 0, 0);
 	sphere.material.specular = 0.0f;
 	sphere.material.shininess = 0.0f;
 	sphere.material.diffuse = 0.0f;
 	sphere.material.ambient = 0.0f;
-	sphere.material.reflective = 0.0f;
+	sphere.material.reflective = 1.0f;
 	sphere.material.transparency = 1.0f;
-	sphere.material.refractiveIndex = 1.5;
+	sphere.material.refractiveIndex = 1.50f;
 	// pure glass marbles need all their color removed
 
 	Mat4 s2Tr;
 	mat_mat4MultiplyMat4(sphere1tr, sphere1sc,  s2Tr);
 	mat_mat4Copy(s2Tr, sphere2.transform);
 	sphere2.material.surfaceColor = tuple_createColor(1, 0, 0);
-	sphere2.material.specular = 0;
-	sphere2.material.shininess = 0;
-	sphere2.material.diffuse = 0;
-	sphere2.material.ambient = 0;
-	sphere2.material.reflective = 0;
-	sphere2.material.transparency = 1.0f;
-	sphere2.material.transparency = 1.5f;
 
 
 
@@ -126,7 +119,7 @@ int main(int argc, char* argv[]) {
 	w.objects[4] = sphere;
 	w.objects[5] = sphere2;
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(5, 4.3f,  0.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(-4.5f, 2.0f,  0.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
 
 	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 

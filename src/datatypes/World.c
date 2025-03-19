@@ -74,9 +74,19 @@ Tuple world_shadeHit(World world, Computations comps, int remaining){
     Tuple lightingColor = material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow, comps.object); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
     Tuple reflectedColor = world_reflectedColor(world, comps, remaining);
     Tuple refractedColor = world_refractedColor(world, comps, remaining);
-    Tuple combinedColor = tuple_tupleAdd(lightingColor, tuple_tupleAdd(refractedColor, reflectedColor));
-    combinedColor.w = 1; // hack to avoid w inconsistencies when adding colors 
-    return combinedColor; 
+    
+    if (comps.object.material.reflective > 0 && comps.object.material.transparency > 0){
+        float reflectance = ray_schlick(comps);
+        Tuple combinedColor = tuple_tupleAdd(lightingColor, tuple_tupleAdd(  tuple_tupleMuls(reflectedColor, reflectance), tuple_tupleMuls(refractedColor, (1.0f - reflectance))));
+        combinedColor.w = 1;
+        return combinedColor;
+    } 
+    else { 
+
+        Tuple combinedColor = tuple_tupleAdd(lightingColor, tuple_tupleAdd(refractedColor, reflectedColor));
+        combinedColor.w = 1; // hack to avoid w inconsistencies when adding colors 
+        return combinedColor; 
+    }
 }
 
 Tuple world_worldColorAt(World world, Ray ray, int remaining){
@@ -103,7 +113,7 @@ int world_pointInShadow(World world, Tuple point){
 
     Intersection hit = intersection_determineHit(xs, noXs);
     free(xs);
-    if (!isnan(hit.t) && hit.t < distance) {
+    if (!isnan(hit.t) && hit.t < distance && hit.object.material.transparency < 0.5f) { // if the obscuring object is atleast 0.5 transparency, it has no shadow
         return 1;
     }
     else {
