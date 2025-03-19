@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
 	Pattern pat = pattern_createPattern(COLOR_WHITE, COLOR_BLACK, Checker);
 	plane.material.pattern = pat;
-	plane.material.reflective = 0.25f;
+	plane.material.reflective = 0.10f;
 	plane1.material.pattern = pat;
 	plane2.material.pattern = pat;
 	plane3.material.pattern = pat;
@@ -82,30 +82,51 @@ int main(int argc, char* argv[]) {
 	mat_mat4Copy(ceilTransl, plane3.transform);
 
 	Mat4 sphere1sc;
-	mat_mat4CreateScaling(sphere1sc, 0.25, 0.25, 0.25);
+	mat_mat4CreateScaling(sphere1sc, 0.5, 0.5, 0.5);
 	Mat4 sphere1tr;
-	mat_mat4CreateTranslation(sphere1tr, 0, 1, 0);
+	mat_mat4CreateTranslation(sphere1tr, 0, 2, 0.0f);
 	Mat4 sphere1Tr;
 	mat_mat4CreateTranslation(sphere1Tr, 0, 2, 0);
 
+
+
+
 	mat_mat4Copy(sphere1Tr, sphere.transform);
-	sphere.material.surfaceColor = tuple_createColor(1, 1, 1);
-	sphere.material.specular = 0;
-	sphere.material.shininess = 0;
-	sphere.material.diffuse = 0;
-	sphere.material.ambient = 0;
-	sphere.material.reflective = 1.0f;
+	sphere.material.surfaceColor = tuple_createColor(1, 0, 0);
+	sphere.material.specular = 0.0f;
+	sphere.material.shininess = 0.0f;
+	sphere.material.diffuse = 0.0f;
+	sphere.material.ambient = 0.0f;
+	sphere.material.reflective = 0.0f;
+	sphere.material.transparency = 1.0f;
+	sphere.material.refractiveIndex = 1.5;
 	// pure glass marbles need all their color removed
 
-	w.objectCount = 5;
+	Mat4 s2Tr;
+	mat_mat4MultiplyMat4(sphere1tr, sphere1sc,  s2Tr);
+	mat_mat4Copy(s2Tr, sphere2.transform);
+	sphere2.material.surfaceColor = tuple_createColor(1, 0, 0);
+	sphere2.material.specular = 0;
+	sphere2.material.shininess = 0;
+	sphere2.material.diffuse = 0;
+	sphere2.material.ambient = 0;
+	sphere2.material.reflective = 0;
+	sphere2.material.transparency = 1.0f;
+	sphere2.material.transparency = 1.5f;
+
+
+
+	w.objectCount = 6;
 	w.objects = malloc(w.objectCount * sizeof(Shape));
 	w.objects[0] = plane1;
 	w.objects[1] = plane2;
+	plane.material.refractiveIndex = 1.5f;
 	w.objects[2] = plane;
 	w.objects[3] = plane3;
 	w.objects[4] = sphere;
+	w.objects[5] = sphere2;
 	Mat4 viewMatrix;
-	mat_mat4CreateView(viewMatrix, tuple_createPoint(5.7f, 4.3f, -5.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
+	mat_mat4CreateView(viewMatrix, tuple_createPoint(5, 4.3f,  0.76f), tuple_createPoint(0, 1, 0), tuple_createVector(0, 1, 0));
 
 	Camera camera = camera_createCamera(height, width, rad(55), viewMatrix);
 

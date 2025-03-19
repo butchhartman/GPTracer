@@ -168,6 +168,7 @@ Computations intersection_prepareComputations(Intersection intersection, Ray ray
     }
     comps.reflectv = tuple_reflect(ray.direction, comps.normalv);
     comps.overPoint = tuple_tupleAdd(comps.point, tuple_tupleMuls(comps.normalv, 0.01f)); // EPSILON : The epsilon value here is higher than standard (0.0001) because otherwise it casues acne
+    comps.underPoint = tuple_tupleSub(comps.point, tuple_tupleMuls(comps.normalv, 0.01f)); // EPSILON
 
     return comps;
 }

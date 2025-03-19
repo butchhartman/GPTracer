@@ -23,3 +23,4 @@ Tuple world_worldColorAt(World world, Ray ray, int remaining);
 int world_pointInShadow(World world, Tuple point);
 
 Tuple world_reflectedColor(World w, Computations comps, int remaining);
+Tuple world_refractedColor(World w, Computations comps, int remaining);

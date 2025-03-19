@@ -73,7 +73,8 @@ Tuple world_shadeHit(World world, Computations comps, int remaining){
     int inShadow = world_pointInShadow(world, comps.overPoint);
     Tuple lightingColor = material_calculateLighting(comps.object.material, world.light, comps.point, comps.eyev, comps.normalv, inShadow, comps.object); // Cannot believe the tests will pass even if the normal vector is swapped for the eye vector
     Tuple reflectedColor = world_reflectedColor(world, comps, remaining);
-    Tuple combinedColor = tuple_tupleAdd(lightingColor, reflectedColor);
+    Tuple refractedColor = world_refractedColor(world, comps, remaining);
+    Tuple combinedColor = tuple_tupleAdd(lightingColor, tuple_tupleAdd(refractedColor, reflectedColor));
     combinedColor.w = 1; // hack to avoid w inconsistencies when adding colors 
     return combinedColor; 
 }
@@ -124,4 +125,27 @@ Tuple world_reflectedColor(World w, Computations comps, int remaining){
     Tuple reflectedColor = tuple_tupleMuls(color, comps.object.material.reflective);
     reflectedColor.w = 1; // hack to keep things consistent with colors
     return reflectedColor;
+}
+
+Tuple world_refractedColor(World w, Computations comps, int remaining){
+    if (comps.object.material.transparency == 0 || remaining == 0) {
+        return COLOR_BLACK;
+    }
+
+    float nRatio = comps.n1 / comps.n2;
+    float cosi = tuple_vectorDot(comps.eyev, comps.normalv);
+    float sin2t = powf(nRatio, 2) * (1 - powf(cosi, 2));
+
+    if (sin2t > 1) {
+        return COLOR_BLACK;
+    }
+
+    float cost = sqrtf(1.0f - sin2t);
+
+    Tuple direction = tuple_tupleSub(tuple_tupleMuls(comps.normalv, nRatio * cosi - cost), tuple_tupleMuls(comps.eyev, nRatio));
+    Ray refractedRay = ray_createRay(comps.underPoint, direction);
+
+    Tuple color = world_worldColorAt(w, refractedRay, remaining - 1);
+
+    return color;
 }
