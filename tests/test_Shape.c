@@ -460,6 +460,231 @@ void test_cubeNormal() {
     }
 }
 
+void test_cylinderMiss() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 0));
+    r = ray_createRay(tuple_createPoint(1, 0, 0), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 0));
+    r = ray_createRay(tuple_createPoint(0, 0, 0), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(1, 1, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+    free(xs);
+
+}
+
+void test_cylinderHit() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(1, 0, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(xs[0].t == 5);
+    TEST_ASSERT_TRUE(xs[1].t == 5);
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(xs[0].t == 4);
+    TEST_ASSERT_TRUE(xs[1].t == 6);
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0.1f, 1, 1));
+    r = ray_createRay(tuple_createPoint(0.5f, 0, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_EQUAL_FLOAT(6.80798f, xs[0].t);
+    TEST_ASSERT_EQUAL_FLOAT(7.08872, xs[1].t );
+    free(xs);
+}
+
+void test_cylinderNormals() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    Tuple n;
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(1, 0, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(1, 0 ,0), n));
+    
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, -5, -1));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0 ,-1), n));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, -2, 1));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(0, 0 ,1), n));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(-1, 1, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createVector(-1, 0 ,0), n));
+}
+
+void test_cylinderMinMaxBounds() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    TEST_ASSERT_TRUE(cyl.minimum == -INFINITY);
+    TEST_ASSERT_TRUE(cyl.maximum ==  INFINITY);
+}
+
+void test_cylinderTruncated() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+    direction = tuple_vectorNormalize(tuple_createVector(0.1f, 1, 0));
+    r = ray_createRay(tuple_createPoint(0, 1.5f, 0), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 3, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 2, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 1, -5), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 1.5f, -2), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+}
+
+void test_cylindersCanBeClosed() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    TEST_ASSERT_EQUAL_INT(0, cyl.closed);
+}
+
+void test_cylinderCapped() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+    cyl.closed = 1;
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, -1, 0));
+    r = ray_createRay(tuple_createPoint(0, 3, 0), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, -1, 2));
+    r = ray_createRay(tuple_createPoint(0, 3, -2), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, -1, 1));
+    r = ray_createRay(tuple_createPoint(0, 4, -2), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 2));
+    r = ray_createRay(tuple_createPoint(0, 0, -2), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 1));
+    r = ray_createRay(tuple_createPoint(0, -1, -2), direction);
+    ray_rayCylinderIntersect(r, cyl, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(2, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    free(xs);
+
+}
+
+void test_cylinderCapNormals() {
+    Shape cyl = shape_createDefaultShape(0, Cylinder);
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+    cyl.closed = 1;
+
+    Tuple n;
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, 1, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, -1, 0)));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0.5f, 1, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, -1, 0)));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, 1, 0.5f));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, -1, 0)));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, 2, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, 1, 0)));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0.5f, 2, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, 1, 0)));
+
+    n = shape_cylinderNormalAt(cyl, tuple_createPoint(0, 2, 0.5f));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, 1, 0)));
+}
+
 int main() {
     RUN_TEST(test_DefaultShapeMaterial);
     RUN_TEST(test_DefaultShapeAssignMaterial);
@@ -477,5 +702,13 @@ int main() {
     RUN_TEST(test_rayIntersectCube);
     RUN_TEST(test_rayCubeMiss);
     RUN_TEST(test_cubeNormal);
+    RUN_TEST(test_cylinderMiss);
+    RUN_TEST(test_cylinderHit);
+    RUN_TEST(test_cylinderNormals);
+    RUN_TEST(test_cylinderMinMaxBounds);
+    RUN_TEST(test_cylinderTruncated);
+    RUN_TEST(test_cylindersCanBeClosed);
+    RUN_TEST(test_cylinderCapped);
+    RUN_TEST(test_cylinderCapNormals);
     return UNITY_END();
 }

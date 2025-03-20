@@ -12,6 +12,12 @@ Shape shape_createDefaultShape(unsigned int instanceID, enum Formfactor formfact
     mat_mat4Copy(defaultTransform, defaultShape.transform);
     defaultShape.formfactor = formfactor;
 
+    if (formfactor == Cylinder) {
+        defaultShape.minimum = -INFINITY;
+        defaultShape.maximum = INFINITY;
+        defaultShape.closed = 0;
+    }
+
     return defaultShape;
 }
 
@@ -47,6 +53,11 @@ Tuple shape_normalAt(Shape shape, Tuple point){
 
         case (Cube):
             localNormal = shape_cubeNormalAt(shape, localPoint);
+            break;
+
+        case (Cylinder):
+            localNormal = shape_cylinderNormalAt(shape, localPoint);
+            break;
         default:
             break;
     }
@@ -80,6 +91,20 @@ Tuple shape_cubeNormalAt(Shape cube, Tuple point){
         return tuple_createVector(0, point.y, 0);
     }
     return tuple_createVector(0, 0, point.z);
+}
+Tuple shape_cylinderNormalAt(Shape cylinder, Tuple point) {
+    
+    float dist  = powf(point.x, 2) + powf(point.z, 2);
+
+    if (dist < 1 && point.y >= cylinder.maximum - 0.01){// EPSILON
+        return tuple_createVector(0, 1, 0);
+    }
+    else if (dist < 1 && point.y <= cylinder.minimum + 0.01) { // EPSILON
+        return tuple_createVector(0, -1, 0);
+    } 
+    else {
+        return tuple_createVector(point.x, 0, point.z);
+    }
 }
 // kind of disgusting that I put this here but ̅ \_(ツ)_/ ̅
 Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint){

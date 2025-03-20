@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	Shape plane2 = shape_createDefaultShape(2, Plane);
 	Shape plane3 = shape_createDefaultShape(7, Plane);
 	Shape sphere = shape_createDefaultShape(3, Sphere);
-	Shape sphere2 = shape_createDefaultShape(4, Cube);
+	Shape sphere2 = shape_createDefaultShape(4, Cylinder);
 	Shape sphere3 = shape_createDefaultShape(5, Sphere);
 	Shape sphere4 = shape_createDefaultShape(6, Sphere);
 
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	Mat4 sphere1sc;
 	mat_mat4CreateScaling(sphere1sc, 0.5, 0.5, 0.5);
 	Mat4 sphere1tr;
-	mat_mat4CreateTranslation(sphere1tr, -2, 2, 0.0f);
+	mat_mat4CreateTranslation(sphere1tr, -2, 0, 0.0f);
 	Mat4 sphere1Tr;
 	mat_mat4CreateTranslation(sphere1Tr, 0, 2, 0);
 
@@ -107,7 +107,9 @@ int main(int argc, char* argv[]) {
 	mat_mat4Copy(s2Tr, sphere2.transform);
 	sphere2.material.surfaceColor = tuple_createColor(1, 0, 0);
 
-
+	sphere2.maximum = 1;
+	sphere2.minimum = -1;
+	sphere2.closed = 1;
 
 	w.objectCount = 6;
 	w.objects = malloc(w.objectCount * sizeof(Shape));
