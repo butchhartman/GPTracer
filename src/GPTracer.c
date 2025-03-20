@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	Shape plane2 = shape_createDefaultShape(2, Plane);
 	Shape plane3 = shape_createDefaultShape(7, Plane);
 	Shape sphere = shape_createDefaultShape(3, Sphere);
-	Shape sphere2 = shape_createDefaultShape(4, Cylinder);
+	Shape sphere2 = shape_createDefaultShape(4, Cone);
 	Shape sphere3 = shape_createDefaultShape(5, Sphere);
 	Shape sphere4 = shape_createDefaultShape(6, Sphere);
 
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	Mat4 sphere1sc;
 	mat_mat4CreateScaling(sphere1sc, 0.5, 0.5, 0.5);
 	Mat4 sphere1tr;
-	mat_mat4CreateTranslation(sphere1tr, -2, 0, 0.0f);
+	mat_mat4CreateTranslation(sphere1tr, -2, 2, 0.0f);
 	Mat4 sphere1Tr;
 	mat_mat4CreateTranslation(sphere1Tr, 0, 2, 0);
 

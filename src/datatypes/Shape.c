@@ -12,7 +12,7 @@ Shape shape_createDefaultShape(unsigned int instanceID, enum Formfactor formfact
     mat_mat4Copy(defaultTransform, defaultShape.transform);
     defaultShape.formfactor = formfactor;
 
-    if (formfactor == Cylinder) {
+    if (formfactor == Cylinder || formfactor == Cone) {
         defaultShape.minimum = -INFINITY;
         defaultShape.maximum = INFINITY;
         defaultShape.closed = 0;
@@ -58,6 +58,9 @@ Tuple shape_normalAt(Shape shape, Tuple point){
         case (Cylinder):
             localNormal = shape_cylinderNormalAt(shape, localPoint);
             break;
+
+        case (Cone): 
+            localNormal = shape_coneNormalAt(shape, localPoint);
         default:
             break;
     }
@@ -105,6 +108,26 @@ Tuple shape_cylinderNormalAt(Shape cylinder, Tuple point) {
     else {
         return tuple_createVector(point.x, 0, point.z);
     }
+}
+
+Tuple shape_coneNormalAt(Shape cone, Tuple point){
+    float dist  = powf(point.x, 2) + powf(point.z, 2);
+
+    if (dist < 1 && point.y >= cone.maximum - 0.01){// EPSILON
+        return tuple_createVector(0, 1, 0);
+    }
+    else if (dist < 1 && point.y <= cone.minimum + 0.01) { // EPSILON
+        return tuple_createVector(0, -1, 0);
+    } 
+    else {
+        float y = sqrtf(powf(point.x, 2) + powf(point.z, 2));
+        if (point.y > 0) {
+            y = -y;
+        }
+        return tuple_createVector(point.x, y, point.z);
+    }
+
+
 }
 // kind of disgusting that I put this here but ̅ \_(ツ)_/ ̅
 Tuple pattern_patternAtObject(Pattern pattern, Shape object, Tuple worldPoint){

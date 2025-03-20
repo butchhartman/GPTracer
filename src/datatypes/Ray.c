@@ -38,6 +38,9 @@ Ray ray_rayShapeIntersect(Ray ray, Shape shape, Intersection **dest, int *length
             ray_rayCylinderIntersect(transformedRay, shape, dest, length);
             break;
 
+        case(Cone):
+            ray_rayConeIntersect(transformedRay, shape, dest, length);
+            break;
         default:
             break;
 
@@ -163,6 +166,9 @@ void ray_rayCylinderIntersect(Ray ray, Shape cylinder, Intersection **dest, int 
 
     float disc = powf(b, 2) - 4 * a * c;
 
+    if (floatCompare(disc, 0) == 1) { // Sometimes the disc can be very hardly below zero because of float rounding. This fixes that
+       disc = 0;
+    }
 
     if (disc < 0 ) {
         return;
@@ -193,6 +199,104 @@ void ray_rayCylinderIntersect(Ray ray, Shape cylinder, Intersection **dest, int 
     }
 
     ray_intersectCaps(cylinder, ray, dest);
+}
+
+void ray_rayConeIntersect(Ray ray, Shape cone, Intersection **dest, int *length) {
+    *dest = malloc(sizeof(Intersection) * 4); // Ray can intersect an end cap, a side, a side, and another endcap
+    *length = 4;
+    (*dest)[0].object = cone;
+    (*dest)[0].t = NAN;
+    (*dest)[1].object = cone;
+    (*dest)[1].t = NAN;
+    (*dest)[2].object = cone;
+    (*dest)[2].t = NAN;
+    (*dest)[3].object = cone;
+    (*dest)[3].t = NAN;
+
+    float a = powf(ray.direction.x, 2) - powf(ray.direction.y, 2) + powf(ray.direction.z, 2);
+    float b = 2*ray.origin.x*ray.direction.x - (2*ray.origin.y*ray.direction.y) + 2*ray.origin.z*ray.direction.z;
+    float c = powf(ray.origin.x, 2) - powf(ray.origin.y, 2) + powf(ray.origin.z, 2);
+
+    if (floatCompare(a, 0) == 1 && floatCompare(b, 0) == 1) { // miss
+        return;
+    } 
+    else if (floatCompare(a, 0) == 1 && floatCompare(b, 0) == 0) { // parallel
+        float t = -c/(2*b);
+        (*dest)[0].t = t;
+        ray_intersectConeCaps(cone, ray, dest);
+    }
+    else if (floatCompare(a, 0) == 0) {
+        float disc = powf(b, 2) - 4 * a * c;
+
+        if (floatCompare(disc, 0) == 1) { // Sometimes the disc can be very hardly below zero because of float rounding. This fixes that
+            disc = 0;
+        }
+
+        if (disc < 0 ) {
+            return;
+        }
+
+        float t0 = (-b - sqrtf(disc)) / (2 * a);
+        float t1 = (-b + sqrtf(disc))  / (2 * a);
+
+        if (t0 > t1) {
+            float temp = t0;
+            t0 = t1;
+            t1 = temp;
+        }
+
+        float y0 = ray.origin.y + t0 * ray.direction.y;
+
+        if (cone.minimum < y0 && y0 < cone.maximum) {
+            (*dest)[0].t = t0; 
+            (*dest)[0].object = cone;
+        }
+
+
+        float y1 = ray.origin.y + t1 * ray.direction.y;
+
+        if (cone.minimum < y1 && y1 < cone.maximum) {
+            (*dest)[1].t = t1; 
+            (*dest)[1].object = cone;
+        }
+
+        ray_intersectConeCaps(cone, ray, dest);
+
+
+    }
+
+}
+
+void ray_intersectConeCaps(Shape cone, Ray ray, Intersection **dest){
+    if (cone.closed == 0 || floatCompare(0, ray.direction.y) == 1) {
+        return;
+    }
+
+    float t = (cone.minimum - ray.origin.y) / ray.direction.y;
+
+    if (ray_checkConeCaps(ray, t, cone.minimum) == 1) {
+
+        (*dest)[2].object = cone;
+        (*dest)[2].t = t;
+    }
+
+    t = (cone.maximum - ray.origin.y) / ray.direction.y;
+    if (ray_checkConeCaps(ray, t, cone.maximum) == 1) {
+
+
+        (*dest)[3].object = cone;
+        (*dest)[3].t = t;
+    }
+}
+
+int ray_checkConeCaps(Ray r, float t, float radius){
+    float x = r.origin.x + t * r.direction.x; // NOTE: THE BELOW SUBTRACTION MAY BE SOURCE OF ERRORS AND MAY NEED TO BE A SMALLER VALUE
+    float z = r.origin.z + t * r.direction.z; //float rounding causes this to be 1.0000000024 instead of 0.99999 on edge cases.... subtract epsilon
+    int returnval = 0;
+    if (((powf(x, 2) + powf(z, 2)) <= fabsf(radius)) || floatCompare((powf(x, 2) + powf(z, 2)), radius) == 1) { // instead of the convoluted thing described above, I just added an extra check for equality to 1
+        returnval = 1;
+    }
+    return returnval; 
 }
 
 void ray_intersectCaps(Shape cylinder, Ray ray, Intersection **dest) {

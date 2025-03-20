@@ -26,7 +26,7 @@ World world_createDefault(){
 
 Intersection *world_intersectWorld(World world, Ray ray, int *length){
     Intersection *xs;
-    xs = malloc(sizeof(Intersection) * world.objectCount * 2); // If objects can ever have more than two intersections this will cause problems
+    xs = malloc(sizeof(Intersection) * world.objectCount * 4); // If objects can ever have more than four intersections this will cause problems
     Intersection *txs;
     for (unsigned int i = 0; i < world.objectCount; i++) {
         ray_rayShapeIntersect(ray, world.objects[i], &txs, length);

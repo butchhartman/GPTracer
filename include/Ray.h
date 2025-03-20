@@ -33,6 +33,10 @@ void ray_raySphereIntersect(Ray ray, Shape sphere, Intersection** dest, int *len
 void ray_rayPlaneIntersect(Ray ray, Shape plane, Intersection **dest, int *length);
 void ray_rayCubeIntersect(Ray ray, Shape cube, Intersection **dest, int *length);
 void ray_rayCylinderIntersect(Ray ray, Shape cylinder, Intersection **dest, int *length);
+void ray_rayConeIntersect(Ray ray, Shape cone, Intersection **dest, int *length);
+
+void ray_intersectConeCaps(Shape cone, Ray ray, Intersection **dest);
+int ray_checkConeCaps(Ray r, float t, float radius);
 
 void ray_intersectCaps(Shape cylinder, Ray ray, Intersection **dest);
 int ray_checkCaps(Ray r, float t);

@@ -685,6 +685,107 @@ void test_cylinderCapNormals() {
     TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0, 1, 0)));
 }
 
+void test_rayIntersectCone() {
+    Shape shape = shape_createDefaultShape(0, Cone);
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 0, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(4, length);
+    TEST_ASSERT_EQUAL_FLOAT(5, xs[0].t);
+    TEST_ASSERT_EQUAL_FLOAT(5, xs[1].t);
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(1, 1, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(4, length);
+    TEST_ASSERT_EQUAL_FLOAT(8.66025f, xs[0].t);
+    TEST_ASSERT_EQUAL_FLOAT(8.66025f, xs[1].t);
+    free(xs);
+
+    direction = tuple_vectorNormalize(tuple_createVector(-0.5f, -1, 1));
+    r = ray_createRay(tuple_createPoint(1, 1, -5), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_INT(4, length);
+    TEST_ASSERT_EQUAL_FLOAT(4.55006f, xs[0].t);
+    TEST_ASSERT_EQUAL_FLOAT(49.44994f, xs[1].t);
+    free(xs);
+}
+
+void test_coneRayParallel() {
+    Shape shape = shape_createDefaultShape(0, Cone);
+    Tuple direction = tuple_vectorNormalize(tuple_createVector(0, 1, 1));
+    Ray r = ray_createRay(tuple_createPoint(0, 0, -1), direction);
+    int length;
+    Intersection *xs;
+
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_FLOAT(4, length);
+    TEST_ASSERT_EQUAL_FLOAT(0.35355f, xs[0].t);
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+
+}
+
+void test_coneEndCaps() {
+    Shape shape = shape_createDefaultShape(0, Cone);
+    shape.minimum = -0.5f;
+    shape.maximum = 0.5f;
+    shape.closed = 1;
+    
+    Tuple direction;
+    Ray r;
+    int length;
+    Intersection *xs;
+
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 0));
+    r = ray_createRay(tuple_createPoint(0, 0, -5), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_FLOAT(4, length);
+    TEST_ASSERT_TRUE(isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+    TEST_ASSERT_TRUE(isnan(xs[2].t));
+    TEST_ASSERT_TRUE(isnan(xs[3].t));
+    free(xs);
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 1));
+    r = ray_createRay(tuple_createPoint(0, 0, -0.25f), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_FLOAT(4, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(isnan(xs[1].t));
+    TEST_ASSERT_TRUE(isnan(xs[2].t));
+    TEST_ASSERT_TRUE(!isnan(xs[3].t));
+    free(xs);
+    direction = tuple_vectorNormalize(tuple_createVector(0, 1, 0));
+    r = ray_createRay(tuple_createPoint(0, 0, -0.25f), direction);
+    ray_rayConeIntersect(r, shape, &xs, &length);
+    TEST_ASSERT_EQUAL_FLOAT(4, length);
+    TEST_ASSERT_TRUE(!isnan(xs[0].t));
+    TEST_ASSERT_TRUE(!isnan(xs[1].t));
+    TEST_ASSERT_TRUE(!isnan(xs[2].t));
+    TEST_ASSERT_TRUE(!isnan(xs[3].t));
+    free(xs);
+}
+
+void test_coneNormalAt() {
+    Shape cone = shape_createDefaultShape(0, Cone);
+    Tuple n;
+
+    n = shape_coneNormalAt(cone, tuple_createPoint(0, 0, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(0 ,0 ,0)));
+
+    n = shape_coneNormalAt(cone, tuple_createPoint(1, 1, 1));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(1 ,-sqrtf(2.0f) ,1)));
+    
+    n = shape_coneNormalAt(cone, tuple_createPoint(-1, -1, 0));
+    TEST_ASSERT_TRUE(tuple_tupleCompare(n, tuple_createVector(-1 ,1 ,0)));
+}
+
 int main() {
     RUN_TEST(test_DefaultShapeMaterial);
     RUN_TEST(test_DefaultShapeAssignMaterial);
@@ -710,5 +811,9 @@ int main() {
     RUN_TEST(test_cylindersCanBeClosed);
     RUN_TEST(test_cylinderCapped);
     RUN_TEST(test_cylinderCapNormals);
+    RUN_TEST(test_rayIntersectCone);
+    RUN_TEST(test_coneRayParallel);
+    RUN_TEST(test_coneEndCaps);
+    RUN_TEST(test_coneNormalAt);
     return UNITY_END();
 }
