@@ -228,9 +228,9 @@ void ray_intersectCaps(Shape cylinder, Ray ray, Intersection **dest) {
 
 int ray_checkCaps(Ray r, float t){
     float x = r.origin.x + t * r.direction.x; // NOTE: THE BELOW SUBTRACTION MAY BE SOURCE OF ERRORS AND MAY NEED TO BE A SMALLER VALUE
-    float z = r.origin.z + t * r.direction.z - 0.01; //float rounding causes this to be 1.0000000024 instead of 0.99999 on edge cases.... subtract epsilon
+    float z = r.origin.z + t * r.direction.z; //float rounding causes this to be 1.0000000024 instead of 0.99999 on edge cases.... subtract epsilon
     int returnval = 0;
-    if (((powf(x, 2) + powf(z, 2)) <= 1)) {
+    if (((powf(x, 2) + powf(z, 2)) <= 1) || floatCompare((powf(x, 2) + powf(z, 2)), 1.0f) == 1) { // instead of the convoluted thing described above, I just added an extra check for equality to 1
         returnval = 1;
     }
     return returnval; 
