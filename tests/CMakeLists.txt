@@ -14,7 +14,7 @@ foreach(fileDir ${srcFiles})
 
 	add_executable(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/tests/${fileName}.c" ${testCSourceFiles} "${CMAKE_SOURCE_DIR}/src/CommonOperations.c") #{CMAKE_SOURCE_DIR}/src/${sourceFileName}.c")
 
-	target_link_libraries(${PROJECT_NAME} unity)
+	target_link_libraries(${PROJECT_NAME} unity yaml)
 	
 	target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/include")
 	target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${CMAKE_SOURCE_DIR}/vendor/Unity/src")

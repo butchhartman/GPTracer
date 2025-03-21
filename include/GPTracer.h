@@ -9,14 +9,5 @@
 #include "World.h"
 #include "Camera.h"
 #include "Patterns.h"
+#include "yaml.h"
 #include <time.h>
-
-typedef struct {
-	Tuple position;
-	Tuple velocity;
-} Projectile;
-
-typedef struct {
-	Tuple gravity;
-	Tuple wind;
-} Environment;
