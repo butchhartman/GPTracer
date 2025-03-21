@@ -8,17 +8,18 @@ void setUp() {
 void tearDown() {
 
 }
+// DISCLAIMER : For tests to pass when calling them from the cmaketools testing tab, the prefix must be ../../ if using the debug tool on the bottom bar, it must be ../../../
 
 void test_emptyWorld() {
     World w;
     w.objectCount = 0;
-    yaml_parseScene(&w, "../../../yaml/emptyWorld.yaml");
+    yaml_parseScene(&w, "../../yaml/emptyWorld.yaml");
     TEST_ASSERT_EQUAL_INT(0, w.objectCount);
 }
 
 void test_light() {
     World w;
-    yaml_parseScene(&w, "../../../yaml/testLight.yaml");
+    yaml_parseScene(&w, "../../yaml/testLight.yaml");
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(50, 100, -50), w.light.position));
     TEST_ASSERT_TRUE(tuple_tupleCompare(tuple_createPoint(1, 1, 1), w.light.intensity));
 }
