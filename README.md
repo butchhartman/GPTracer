@@ -4,7 +4,7 @@ The program is currently configured to produce a rather basic scene at 100x100 r
 # Build Instructions
 Clone the repo:
 ```
-git clone https://github.com/butchhartman/GPTracer
+git clone https://github.com/butchhartman/GPTracer.git
 ```
 Then, in the cloned directory, run:
 ```
