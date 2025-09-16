@@ -42,8 +42,6 @@ Intersection *world_intersectWorld(World world, Ray ray, int *length){
         // xs[i * 2 + 1].object = txs[1].object;
     }
     // TODO : move to function. 
-    //THIS WHOLE FUCKING ERROR WAS CAUSED BY MY DUMBASS FORGETTING TO SORT THE OBJECT OF THE STRUCT WITH THE T VALUE!
-    // ONLY SORTING THE T VALUES CAUSED OBJECTS TO BE DRAWN OVER EACH OTHER! I DONT EVEN FUCKING KNOW WHY!!!
     int n = 2*world.objectCount;
     for (int i = 0; i < n - 1; i++) {
         int min = i;
